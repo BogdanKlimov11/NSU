@@ -197,10 +197,12 @@ byte numF[8] = {
   0b00000000
 };
 
-byte* bin; // указатель на массив с кадром
+// указатель на массив с кадром
+byte* bin;
 
 void setup() {
-  for (byte i = 0; i < 8; i++) { // инициализация пинов
+  // инициализация пинов
+  for (byte i = 0; i < 8; i++) {
     pinMode(r[i], OUTPUT);
     digitalWrite(r[i], LOW);
     pinMode(c[i], OUTPUT);
