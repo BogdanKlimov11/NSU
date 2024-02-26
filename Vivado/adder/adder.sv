@@ -7,15 +7,15 @@ module adder(
     output s,
     output cout
     );
-    
-    assign s = !a & !b & cin
-                | !a & b & !cin
-                | a & !b & !cin
-                | a & b & cin;
-    
-    assign cout = !a & b & cin
-                | a & !b & cin
-                | a & b & !cin
-                | a & b & cin; 
-    
+
+assign s = !a & !b & cin
+            | !a & b & !cin
+            | a & !b & !cin
+            | a & b & cin;
+
+assign cout = !a & b & cin
+            | a & !b & cin
+            | a & b & !cin
+            | a & b & cin; 
+
 endmodule
