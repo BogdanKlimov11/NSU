@@ -12,7 +12,7 @@ module adder(
                 | !a & b & !cin
                 | a & !b & !cin
                 | a & b & cin;
-
+    
     assign cout = !a & b & cin
                 | a & !b & cin
                 | a & b & !cin
