@@ -2,6 +2,7 @@
 
 // TestBench for 2 bit muxer
 module muxer2_TB();
+
 logic [1:0] in;
 logic       sel;
 logic       q;
