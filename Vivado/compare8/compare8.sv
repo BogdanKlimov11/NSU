@@ -63,5 +63,6 @@ generate
     end
 endgenerate
 
-compare2  COMPARE(.a(gr[1:0]), .b(le[1:0]), .greater(GREATER), .less(LESS));
+    compare2  COMPARE(.a(mo[1:0]), .b(le[1:0]), .more(MORE), .less(LESS));
+
 endmodule
