@@ -12,10 +12,10 @@ module subtractor(
 		| !a & !b & !cin 
 		| a & b & !cin 
 		| a & !b & cin);
-
+    
     assign cout = !a & b & !cin 
 		| !a & !b & cin 
 		| !a & b & cin 
 		| a & b & cin;
-
+    
 endmodule
