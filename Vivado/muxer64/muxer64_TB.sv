@@ -2,6 +2,7 @@
 
 // TestBench for 8 bit muxer
 module Multiplex8_TB();
+
 logic [7:0] in;
 logic [2:0] sel;
 logic q;
