@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-//TestBench for 2 bit muxer
+// TestBench for 2 bit muxer
 module muxer2_TB();
 logic [1:0] in;
 logic       sel;
@@ -18,7 +18,7 @@ end
 
 endmodule
 
-//TestBench for 4 bit muxer
+// TestBench for 4 bit muxer
 module muxer4_TB();
 logic [3:0] in;
 logic [1:0] sel;
