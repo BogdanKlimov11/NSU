@@ -7,7 +7,7 @@ void loop() {
   // считываем значение с аналогового пина
   int sensorValue = analogRead(A0);
   // преобразуем значение в напряжение
-  float voltage = sensorValue * (5 / 1023.0);
+  float voltage = sensorValue * (5.0 / 1023.0);
   // выводим значение в консоль
   Serial.print("Напряжение на батарейке: ");
   Serial.print(voltage);
