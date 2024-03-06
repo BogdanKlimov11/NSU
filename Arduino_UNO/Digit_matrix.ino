@@ -126,7 +126,8 @@ byte num0[8] = {
 byte* bin; // указатель на массив с кадром
 
 void setup() {
-  for (byte i = 0; i < 8; i++) { // инициализация пинов
+  // инициализация пинов
+  for (byte i = 0; i < 8; i++) {
     pinMode(r[i], OUTPUT);
     digitalWrite(r[i], LOW);
     pinMode(c[i], OUTPUT);
