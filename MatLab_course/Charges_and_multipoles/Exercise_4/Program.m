@@ -1,4 +1,4 @@
-f = fopen('chargesN.txt', 'rt');
+f = fopen('ChargesN.txt', 'rt');
 fld = fscanf(f, '%d %d %d %d', [4, 4]);
 fclose(f);
 
