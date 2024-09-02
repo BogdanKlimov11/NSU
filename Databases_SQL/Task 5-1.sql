@@ -1,0 +1,28 @@
+DROP TABLE IF EXISTS DeadLockA, DeadLockB;
+
+CREATE TABLE DeadLockA
+(
+    i INT PRIMARY KEY
+);
+
+CREATE TABLE DeadLockB
+(
+    i INT PRIMARY KEY
+);
+
+-- T1
+BEGIN;
+INSERT INTO DeadLockA
+VALUES (1);
+
+-- T2
+BEGIN;
+INSERT INTO DeadLockB
+VALUES (1);
+INSERT INTO DeadLockA
+VALUES (1);
+
+-- T1
+INSERT INTO DeadLockB
+VALUES (1);
+-- deadlock here!
