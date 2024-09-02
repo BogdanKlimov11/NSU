@@ -1,3 +1,0 @@
-sudo apt-get install php mysql-server apache2 phpmyadmin
-
-//стандартный сервис использующий LAMP? phpmyadmin
