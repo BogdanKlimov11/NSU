@@ -1,4 +1,5 @@
 #!/bin/bash
+
 if  [[ $# =~ 3 ]] ; then
    echo "error: args aren't valid" >&2;
    exit 1;
