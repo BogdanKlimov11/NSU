@@ -68,25 +68,25 @@ static void led_9(uint8_t state){
 int main(void){
 	init();
 	while(1){
-		for(int i = 0; i<=800000; i++){
+		for(int i = 0; i<=200000; i++){
 			led_6((uint8_t)1);
 			led_7((uint8_t)0);
 			led_8((uint8_t)0);
 			led_9((uint8_t)0);
 		}
-		for(int i = 0; i<=800000; i++){
+		for(int i = 0; i<=200000; i++){
 			led_6((uint8_t)0);
 			led_7((uint8_t)0);
 			led_8((uint8_t)0);
 			led_9((uint8_t)1);
 		}
-		for(int i = 0; i<=800000; i++){
+		for(int i = 0; i<=200000; i++){
 			led_6((uint8_t)0);
 			led_7((uint8_t)1);
 			led_8((uint8_t)0);
 			led_9((uint8_t)0);
 		}
-		for(int i = 0; i<=800000; i++){
+		for(int i = 0; i<=200000; i++){
 			led_6((uint8_t)0);
 			led_7((uint8_t)0);
 			led_8((uint8_t)1);
