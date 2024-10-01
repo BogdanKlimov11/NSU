@@ -8,7 +8,6 @@
 static void init(void){
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
 	GPIOC->MODER &= ~GPIO_MODER_MODER6;
-	GPIOC->MODER &= ~GPIO_MODER_MODER7;
 }
 
 
