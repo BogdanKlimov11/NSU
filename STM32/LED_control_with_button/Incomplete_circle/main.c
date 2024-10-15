@@ -91,7 +91,7 @@ static void light(uint8_t state, struct buttons* buttons){
 			buttons->first=1;
 			return;
 		}
-	} // 
+	}
 	else{
 		if (buttons->first==1){
 			//GPIOC->ODR &=~GPIO_ODR_6;
