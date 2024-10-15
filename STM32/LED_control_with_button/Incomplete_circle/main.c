@@ -62,7 +62,7 @@ static void light(uint8_t state, struct buttons* buttons){
 			buttons->second = 1;
 			return;
 			
-			//GPIOC->BSRR = state ? CPIO_BSRR_BS_6 : GPIO_BSRR_BR_6; // for general purpose ports only
+			//GPIOC->BSRR = (state) ? CPIO_BSRR_BS_6 : GPIO_BSRR_BR_6; // for general purpose ports only
     		}
 		if(buttons->second == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_8;
