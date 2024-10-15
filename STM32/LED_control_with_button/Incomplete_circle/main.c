@@ -42,7 +42,7 @@ static uint8_t systick_flat_check(void){
 
 
 int delay(void){
-	if (systick_flat_check() == 1){
+	if(systick_flat_check() == 1){
 		return(1);
 	}
 	else{
@@ -52,8 +52,8 @@ int delay(void){
 
 
 static void light(uint8_t state, struct buttons* buttons){
-	if (state){
-		if (buttons->first == 1){
+	if(state){
+		if(buttons->first == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_6;
 			GPIOC->BRR = GPIO_BRR_BR_6;
 			//GPIOC->ODR |= GPIO_ODR_8;
@@ -64,7 +64,7 @@ static void light(uint8_t state, struct buttons* buttons){
 			
 			//GPIOC->BSRR = state ? CPIO_BSRR_BS_6 : GPIO_BSRR_BR_6; // for general purpose ports only
     		}
-		if (buttons->second == 1){
+		if(buttons->second == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_8;
 			GPIOC->BRR = GPIO_BRR_BR_8;
 			//GPIOC->ODR |= GPIO_ODR_7; 
@@ -73,7 +73,7 @@ static void light(uint8_t state, struct buttons* buttons){
 			buttons->third = 1;
 			return;
 		}
-		if (buttons->third == 1){
+		if(buttons->third == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_7;
 			GPIOC->BRR = GPIO_BRR_BR_7;
 			//GPIOC->ODR |= GPIO_ODR_9; 
@@ -82,7 +82,7 @@ static void light(uint8_t state, struct buttons* buttons){
 			buttons->four = 1;
 			return;
 		}
-		if (buttons->four == 1){
+		if(buttons->four == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_9;
 			GPIOC->BRR = GPIO_BRR_BR_9;
 			//GPIOC->ODR |= GPIO_ODR_6; 
@@ -93,7 +93,7 @@ static void light(uint8_t state, struct buttons* buttons){
 		}
 	}
 	else{
-		if (buttons->first == 1){
+		if(buttons->first == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_6;
 			GPIOC->BRR = GPIO_BRR_BR_6;
 			//GPIOC->ODR |= GPIO_ODR_9; 
@@ -102,7 +102,7 @@ static void light(uint8_t state, struct buttons* buttons){
 			buttons->four = 1;
 			return;
 		}
-		if (buttons->second == 1){
+		if(buttons->second == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_8;
 			GPIOC->BRR = GPIO_BRR_BR_8;
 			//GPIOC->ODR |= GPIO_ODR_6; 
@@ -111,7 +111,7 @@ static void light(uint8_t state, struct buttons* buttons){
 			buttons->first = 1;
 			return;
 		}
-		if (buttons->third == 1){
+		if(buttons->third == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_7;
 			GPIOC->BRR = GPIO_BRR_BR_7;
 			//GPIOC->ODR |= GPIO_ODR_8; 
@@ -120,7 +120,7 @@ static void light(uint8_t state, struct buttons* buttons){
 			buttons->second = 1;
 			return;
 		}
-		if (buttons->four == 1){
+		if(buttons->four == 1){
 			//GPIOC->ODR &= ~GPIO_ODR_9;
 			GPIOC->BRR = GPIO_BRR_BR_9;
 			//GPIOC->ODR |= GPIO_ODR_7; 
@@ -147,18 +147,18 @@ static uint8_t btn_filter(){
 	static uint8_t _curr = 0, _prev = 0;
 	static uint32_t _counter = 0;
 	_curr = (GPIO_IDR_0 & GPIOA->IDR) ? 1 : 0;
-	if (_prev != _curr){
+	if(_prev != _curr){
 		_prev = _curr;
 		_counter = 0;
 	}
 	else{
 		_counter++;
-		if (_counter > BTN_T){
+		if(_counter > BTN_T){
 			btn_stable_curr_state = _curr;
-			if (btn_stable_curr_state != btn_stable_prev_state){
+			if(btn_stable_curr_state != btn_stable_prev_state){
 				btn_stable_prev_state = btn_stable_curr_state;
 				//_edge_detected = 1;
-				if (btn_stable_prev_state == 0){
+				if(btn_stable_prev_state == 0){
 					state = !state;
 					_unpressed = 1;
 				}
@@ -213,18 +213,18 @@ int main(void){
 			state = 0;
 		}*/
 		
-		if (systick_flat_check()){
+		if(systick_flat_check()){
 			light_delay = light_delay + 1;
 			btn_filter();
 		}
 		
 		//state = btn_state(); // tmp - nash state
-		if (btn_pressed()){
+		if(btn_pressed()){
 			_pressed = 0;
 		}
 		
 		int s_witch = delay();
-		if (s_witch == 1 && light_delay >= 200){
+		if(s_witch == 1 && light_delay >= 200){
 			light(state, &but);
 			light_delay = 0;
 		}
