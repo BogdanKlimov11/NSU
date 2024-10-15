@@ -45,8 +45,9 @@ int delay(void){
 	if (systick_flat_check()==1){
 		return(1);
 	}
-	else
+	else{
 		return(0);
+	}
 }
 
 
