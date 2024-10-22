@@ -14,7 +14,7 @@ ConfButton InitButton(GroundBtnRead groundBtnRead){
 
 
 //uint8_t ButtonReadCurrInstantState(){
-//  return (GPIO_IDR_0 & GPIOA->IDR) ? 1 : 0;
+//	return (GPIO_IDR_0 & GPIOA->IDR) ? 1 : 0;
 //}
 
 
