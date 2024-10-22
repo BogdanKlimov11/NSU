@@ -42,14 +42,14 @@ void HandlerButton(ConfButton* button){
 
 uint8_t CurrStableState(ConfButton* button){
 	if (button != NULL){
-    return button->currStableState;
+		return button->currStableState;
 	}
 	return 0;
 }
 
 uint8_t PrevStableState(ConfButton* button){
 	if (button != NULL){
-    return button->prevStableState;
+		return button->prevStableState;
 	}
 	return 0;
 }
@@ -57,7 +57,7 @@ uint8_t PrevStableState(ConfButton* button){
 
 uint8_t PushButtListnr(ConfButton* button){
 	if (button != NULL){
-    return ((button->currStableState == 1) && (button->prevStableState == 0)) ? 1 : 0;
+		return ((button->currStableState == 1) && (button->prevStableState == 0)) ? 1 : 0;
 	}
 	return 0;
 }
@@ -65,7 +65,7 @@ uint8_t PushButtListnr(ConfButton* button){
 
 uint8_t ReleasingButtListnr(ConfButton* button){
 	if (button != NULL){
-    return ((button->currStableState == 0) && (button->prevStableState == 1)) ? 1 : 0;
+		return ((button->currStableState == 0) && (button->prevStableState == 1)) ? 1 : 0;
 	}
 	return 0;
 }
