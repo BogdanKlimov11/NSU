@@ -119,7 +119,10 @@ int main(void){
 			HandlerButton(&button1);
 			HandlerButton(&button2);
 			GPIOA->ODR &= ~GPIO_ODR_15;
-			
+			__NOP();
+			__NOP();
+			__NOP();
+			__NOP();
 			GPIOC->ODR |= GPIO_ODR_12;
 			HandlerButton(&button3);
 			HandlerButton(&button4);
