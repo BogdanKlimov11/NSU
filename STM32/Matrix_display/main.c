@@ -47,7 +47,7 @@ int main(void){
 	init();
 	matrix_init();
 	SPI2->DR = 0x80ff; // selection of diodes
-	while (SPI2->SR & SPI_SR_BSY);
+	while(SPI2->SR & SPI_SR_BSY);
 		GPIOA->BSRR = GPIO_BSRR_BS_8;
 	while(1){
 		// TODO
