@@ -5,14 +5,14 @@
 typedef uint8_t (*GroundBtnRead)(void);
 
 typedef struct ConfButton{
-    uint32_t listenRange;
-    uint32_t countWithoutChange;
-		uint8_t currStableState;
-    uint8_t currInstantState;
-    uint8_t prevStableState;
-    uint8_t prevInstantState;
-		GroundBtnRead groundBtnRead;
-}ConfButton;
+	uint32_t listenRange;
+	uint32_t countWithoutChange;
+	uint8_t currStableState;
+	uint8_t currInstantState;
+	uint8_t prevStableState;
+	uint8_t prevInstantState;
+	GroundBtnRead groundBtnRead;
+} ConfButton;
 
 ConfButton InitButton(GroundBtnRead groundBtnRead);
 //uint8_t ButtonReadCurrInstantState(void);
