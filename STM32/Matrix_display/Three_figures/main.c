@@ -26,7 +26,7 @@ void init(void){
   GPIOC->MODER |= GPIO_MODER_MODER6_0|GPIO_MODER_MODER7_0|GPIO_MODER_MODER8_0|GPIO_MODER_MODER9_0;
   
   SystemCoreClockUpdate();
-  SysTick->LOAD = SystemCoreClock / 1000 - 1; //1 ms
+  SysTick->LOAD = SystemCoreClock / 1000 - 1; // 1 ms
   SysTick->CTRL = SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk;
   
 }
