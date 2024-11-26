@@ -14,21 +14,20 @@ uint8_t button_3_read(void);
 uint8_t button_4_read(void);
 
 void init(void){
-  RCC->AHBENR |= RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOAEN;
-  
-  GPIOA->MODER &= ~(GPIO_MODER_MODER0|GPIO_MODER_MODER4|GPIO_MODER_MODER5);
-  GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPDR4|GPIO_PUPDR_PUPDR5);
-  GPIOA->PUPDR |= GPIO_PUPDR_PUPDR4_1|GPIO_PUPDR_PUPDR5_1;
-  GPIOC->MODER |= GPIO_MODER_MODER12_0;
-  GPIOA->MODER |= GPIO_MODER_MODER15_0;
-  
-  GPIOC->MODER &= ~(GPIO_MODER_MODER6|GPIO_MODER_MODER7|GPIO_MODER_MODER8|GPIO_MODER_MODER9);
-  GPIOC->MODER |= GPIO_MODER_MODER6_0|GPIO_MODER_MODER7_0|GPIO_MODER_MODER8_0|GPIO_MODER_MODER9_0;
-  
-  SystemCoreClockUpdate();
-  SysTick->LOAD = SystemCoreClock / 1000 - 1; // 1 ms
-  SysTick->CTRL = SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk;
-  
+	RCC->AHBENR |= RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOAEN;
+	
+	GPIOA->MODER &= ~(GPIO_MODER_MODER0|GPIO_MODER_MODER4|GPIO_MODER_MODER5);
+	GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPDR4|GPIO_PUPDR_PUPDR5);
+	GPIOA->PUPDR |= GPIO_PUPDR_PUPDR4_1|GPIO_PUPDR_PUPDR5_1;
+	GPIOC->MODER |= GPIO_MODER_MODER12_0;
+	GPIOA->MODER |= GPIO_MODER_MODER15_0;
+	
+	GPIOC->MODER &= ~(GPIO_MODER_MODER6|GPIO_MODER_MODER7|GPIO_MODER_MODER8|GPIO_MODER_MODER9);
+	GPIOC->MODER |= GPIO_MODER_MODER6_0|GPIO_MODER_MODER7_0|GPIO_MODER_MODER8_0|GPIO_MODER_MODER9_0;
+	
+	SystemCoreClockUpdate();
+	SysTick->LOAD = SystemCoreClock / 1000 - 1; // 1 ms
+	SysTick->CTRL = SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk;
 }
 
 //new
@@ -55,7 +54,7 @@ void matrix_init(void){
 //new end
 
 uint8_t systick_flag_check(void){
-  return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1 : 0;
+	return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1 : 0;
 }
 
 //volatile uint8_t a = 0;
@@ -67,19 +66,19 @@ uint8_t button_0_read(void){
 }
 
 uint8_t button_1_read(void){
-  return (GPIO_IDR_4 & GPIOA->IDR) ? 1 : 0;
+	return (GPIO_IDR_4 & GPIOA->IDR) ? 1 : 0;
 }
 
 uint8_t button_2_read(void){
-  return (GPIO_IDR_5 & GPIOA->IDR) ? 1 : 0;
+	return (GPIO_IDR_5 & GPIOA->IDR) ? 1 : 0;
 }
 
 uint8_t button_3_read(void){
-  return (GPIO_IDR_4 & GPIOA->IDR) ? 1 : 0;
+	return (GPIO_IDR_4 & GPIOA->IDR) ? 1 : 0;
 }
 
 uint8_t button_4_read(void){
-  return (GPIO_IDR_5 & GPIOA->IDR) ? 1 : 0;
+	return (GPIO_IDR_5 & GPIOA->IDR) ? 1 : 0;
 }
 
 void SysTick_Handler(void){
@@ -109,8 +108,8 @@ int main(void){
 		}
 	};
 	uint8_t currMovedObj = 0;
-  while(1){
+	while(1){
 		ObjectMove(buttons, screenObject, 5, 3, &currMovedObj);
 		ScreenSet(&screenScene, screenObject, 3);
-  }
+	}
 }
