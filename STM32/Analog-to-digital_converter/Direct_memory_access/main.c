@@ -91,7 +91,7 @@ void adc_init(void){
 }
 
 void SPI2_IRQHandler(void){
-	for (int j = 0; j < 256; j++){
+	for(int j = 0; j < 256; j++){
 		sum+=ADC_array[j];
 	}
 	tmp_1 = (uint16_t)(sum / 256);
