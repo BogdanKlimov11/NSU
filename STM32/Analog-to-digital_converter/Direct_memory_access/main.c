@@ -15,7 +15,6 @@ uint8_t systick_flag_check(void);
 void SysTick_Handler(void);
 
 void SPI2_IRQHandler(void);
-void CaseLedInvert(uint8_t state, int8_t num);
 
 void init(void){
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOAEN;
