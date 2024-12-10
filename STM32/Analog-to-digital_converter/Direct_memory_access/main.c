@@ -121,7 +121,7 @@ void SPI2_IRQHandler(void){
 }
 
 uint8_t systick_flag_check(void){
-  return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1 : 0;
+	return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1 : 0;
 }
 
 void SysTick_Handler(void){
