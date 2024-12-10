@@ -129,6 +129,7 @@ int main(void){
 	init();
 	adc_init();
 	matrix_init();
-
-	while(1){}
+	while(1){
+		//TODO
+	}
 }
