@@ -1,18 +1,21 @@
 #include "stm32f0xx.h"
 
-static uint16_t pos = 0;
-
 static uint8_t ADC_array[256];
+static uint16_t pos = 0;
 static uint16_t sum = 0;
 static uint16_t tmp_1 = 0;
+
+uint8_t systick_flag_check(void);
 
 void init(void);
 void matrix_init(void);
 void adc_init(void);
 
-uint8_t systick_flag_check(void);
-
 void SPI2_IRQHandler(void);
+
+uint8_t systick_flag_check(void){
+	return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1 : 0;
+}
 
 void init(void){
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOAEN;
@@ -120,10 +123,6 @@ void SPI2_IRQHandler(void){
 	GPIOA->BRR = GPIO_BRR_BR_8;
 	uint16_t tmp = (uint16_t)SPI2->DR;
 	tmp = 0;
-}
-
-uint8_t systick_flag_check(void){
-	return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1 : 0;
 }
 
 int main(void){
