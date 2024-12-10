@@ -82,7 +82,7 @@ uint8_t button_4_read(void){
 }
 
 void SysTick_Handler(void){
-	Handler5Button(buttons);
+	HandlerButton(buttons);
 	ScreenDraw(&screenScene);
 }
 
