@@ -94,24 +94,30 @@ void SPI2_IRQHandler(void){
 	for (int j = 0; j < 256; j++){
 		sum+=ADC_array[j];
 	}
-	tmp_1 = (uint16_t)(sum/256);
+	tmp_1 = (uint16_t)(sum / 256);
 	sum = 0;
-	if((tmp_1 <= 0x000000FF) && (tmp_1 >0x000000DF))
-			pos = 0b11111111;
-		else if((tmp_1 <= 0x000000DF) && (tmp_1 >0x000000BF))
+	if((tmp_1 <= 0x000000FF) && (tmp_1 > 0x000000DF))
+		pos = 0b11111111;
+	else
+		if((tmp_1 <= 0x000000DF) && (tmp_1 > 0x000000BF))
 			pos = 0b11111110;
-		else if((tmp_1 <= 0x000000BF) && (tmp_1 > 0x0000009F))
-			pos = 0b11111100;
-		else if((tmp_1 <= 0x0000009F) && (tmp_1 >0x0000007F))
-			pos = 0b11111000;
-		else if((tmp_1 <= 0x0000007F) && (tmp_1 >0x0000005F))
-			pos = 0b11110000;
-		else if((tmp_1 <= 0x0000005F) && (tmp_1 >0x0000003F))
-			pos = 0b11100000;
-		else if((tmp_1 <= 0x0000003F) && (tmp_1 >0x0000001F))
-			pos = 0b11000000;
 		else
-			pos = 0b10000000;
+			if((tmp_1 <= 0x000000BF) && (tmp_1 > 0x0000009F))
+				pos = 0b11111100;
+			else
+				if((tmp_1 <= 0x0000009F) && (tmp_1 > 0x0000007F))
+					pos = 0b11111000;
+				else
+					if((tmp_1 <= 0x0000007F) && (tmp_1 > 0x0000005F))
+						pos = 0b11110000;
+					else
+						if((tmp_1 <= 0x0000005F) && (tmp_1 > 0x0000003F))
+							pos = 0b11100000;
+						else
+							if((tmp_1 <= 0x0000003F) && (tmp_1 > 0x0000001F))
+								pos = 0b11000000;
+							else
+								pos = 0b10000000;
 
 	SPI2->DR = pos | (1 << 8);
 	GPIOA->BSRR = GPIO_BSRR_BS_8;
