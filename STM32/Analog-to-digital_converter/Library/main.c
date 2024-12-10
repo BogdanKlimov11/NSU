@@ -1,7 +1,7 @@
+#include "stm32f0xx.h"
 #include "button.h"
 #include "driver.h"
 #include "control.h"
-#include "stm32f0xx.h"
 #include "multim.h"
 
 #define buffersize 128
