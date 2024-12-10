@@ -121,11 +121,11 @@ void matrix_init(void){
 			Matrix[i][j] = 0;
 		}
 	}
-	//  Matrix[1][1]=1;
-	//  Matrix[0][1]=1;
-	//  Matrix[1][0]=1;
-	//  Matrix[2][1]=1;
-	//  Matrix[1][2]=1;
+//	Matrix[1][1]=1;
+//	Matrix[0][1]=1;
+//	Matrix[1][0]=1;
+//	Matrix[2][1]=1;
+//	Matrix[1][2]=1;
 }
 
 void matrix_update(void){
