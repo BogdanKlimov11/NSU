@@ -1,6 +1,5 @@
 #include "stm32f0xx.h"
 
-static int HandleCount = 0;
 static uint16_t pos = 0;
 
 static uint8_t ADC_array[256];
@@ -12,7 +11,6 @@ void matrix_init(void);
 void adc_init(void);
 
 uint8_t systick_flag_check(void);
-void SysTick_Handler(void);
 
 void SPI2_IRQHandler(void);
 
@@ -126,19 +124,6 @@ void SPI2_IRQHandler(void){
 
 uint8_t systick_flag_check(void){
 	return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1 : 0;
-}
-
-void SysTick_Handler(void){
-	HandleCount++;
-
-	GPIOA->ODR |= GPIO_ODR_15;
-	GPIOA->ODR &= ~GPIO_ODR_15;
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	GPIOC->ODR |= GPIO_ODR_12;
-	GPIOC->ODR &= ~GPIO_ODR_12;
 }
 
 int main(void){
