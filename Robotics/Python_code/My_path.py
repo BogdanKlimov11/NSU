@@ -1,12 +1,10 @@
-import rospy
 from turtlesim.msg import Pose
+import rospy
 from math import *
-
-step = 1
 
 class Path:
     def __init__(self) -> None:
-        # rospy.Subscriber('my_velocity', Twist, self.callback)
+        # Подписка на топик для получения пути
         self.pub = rospy.Publisher('my_path', Pose, queue_size=10)
         self.timer = rospy.Timer(rospy.Duration(0.1), self.timer_callback)
         self.counter = 0
@@ -15,7 +13,8 @@ class Path:
         self.step = 1
     
     def timer_callback(self, data):
-        self.counter+=self.step
+        # Обновление координат и публикация нового пути
+        self.counter += self.step
         print('X: ', self.x, '\nY: ', self.y)
         self.talker()
     
@@ -23,17 +22,9 @@ class Path:
         rospy.spin()
     
     def talker(self):
+        # Генерация нового пути
         pose = Pose()
-        # pose.x = 5 + 4 * cos(self.counter / 20)
-        
-        # pose.x = 5 + self.counter / 30
-        # if (self.counter == 50):
-        #     self.step = -1
-        # if (self.counter == -50):
-        #     self.step = 1
         self.x = 5
-
-        # pose.y = 2 + 1 * sin(self.counter / 4)
         pose.y = 5
         self.y = pose.y
         self.pub.publish(pose)
