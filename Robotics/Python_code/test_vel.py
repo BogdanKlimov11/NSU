@@ -17,15 +17,3 @@ while 1:
     vel = struct.pack('ff', 1, 0)
     ser.write(vel)
     print("test is done")
-    # if i <= 1:
-    #     vel = struct.pack('ff', 1 - i, i)
-    #     ser.write(vel)
-    #     i = i + 0.1
-
-    # if i > 1:
-    #     a = i - 1
-    #     vel = struct.pack('ff', i - 1, 2 - i)
-    #     ser.write(vel)
-    #     i = i + 0.1
-    #     if i >= 2:
-    #         i = 0
