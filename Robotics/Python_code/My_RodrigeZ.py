@@ -9,7 +9,7 @@ dist = numpy.matrix([[0.06], [-0.1], [-0.006], [0.009], [0]])
 
 class My_RodrigeZ:
     def __init__(self) -> None:
-        # rospy.Subscriber('my_velocity', Twist, self.callback)
+        # Подписка на топик для получения положения черепахи
         self.pub = rospy.Publisher('my_turtle_pose', Pose, queue_size = 10)
         
         self.cur_x = 0
@@ -24,6 +24,7 @@ class My_RodrigeZ:
         self.timer = rospy.Timer(rospy.Duration(0.01), self.timer_callback)
     
     def timer_callback(self):
+        # Основной цикл для захвата и обработки изображений с камеры
         my_pose = Pose()
 
         img = self.cap.read()
