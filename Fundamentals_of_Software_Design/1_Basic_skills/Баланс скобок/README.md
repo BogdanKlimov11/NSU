@@ -24,4 +24,4 @@ def check_parentheses(expression):
 * `"((())))"`
 * `"(()"`
 
-Замечание. Имеется <a href="">продвинутая версия</a>.
+Замечание. Имеется <a href="https://github.com/BogdanKlimov11/NSU/tree/main/Fundamentals_of_Software_Design/1_Basic_skills/Баланс скобок (продвинутая версия)">продвинутая версия</a>.
