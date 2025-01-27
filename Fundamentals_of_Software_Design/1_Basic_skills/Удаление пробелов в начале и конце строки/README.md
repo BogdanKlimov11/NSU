@@ -6,6 +6,11 @@
 
 Для определения пробельности символов использовать функцию `isspace()` из `ctype.h`.
 
+```python
+def strtrim(string):
+   ...
+```
+
 ```c
 void strtrim(char *string) 
 {
@@ -14,6 +19,13 @@ void strtrim(char *string)
 ```
 
 Пример использования:
+
+```python
+buf = "   abc   "
+print(f"<{buf}>")  # <   abc   >
+trimmed = strtrim(buf)
+print(f"<{trimmed}>")  # <abc>
+```
 
 ```c
 char buf[] = " abc ";
