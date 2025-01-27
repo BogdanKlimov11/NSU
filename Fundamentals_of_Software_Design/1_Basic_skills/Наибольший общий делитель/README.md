@@ -7,7 +7,8 @@
 НОД($a$, $0$) = $a$
 
 ```c
-int greatest_common_divisor(int a, int b) {
+int greatest_common_divisor(int a, int b)
+{
    /* ... */
 }
 ```
