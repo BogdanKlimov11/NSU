@@ -8,7 +8,8 @@ def shuffle_array(arr):
 ```
 
 ```c
-void shuffle_array(int arr[], size_t count) {
+void shuffle_array(int arr[], size_t count)
+{
    ...
 }
 ```
