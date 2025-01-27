@@ -4,6 +4,11 @@
 
 Вычислить значение этого многочлена в точке $x$, то есть $a[n]x^n +...+ a[1]x + a[0]$.
 
+```python
+def polynom(x, a, n):
+    ...
+```
+
 ```c
 double polynom(double x, double a[], int n)
 {
