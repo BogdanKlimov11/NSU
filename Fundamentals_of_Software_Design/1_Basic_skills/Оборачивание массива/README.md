@@ -5,6 +5,6 @@
 ```c
 void reverse(int arr[], size_t count)
 {
-    // ...
+    /* .... */
 }
 ```
