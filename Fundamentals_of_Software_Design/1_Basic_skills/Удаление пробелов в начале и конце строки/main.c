@@ -2,8 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 
-void strtrim(char *string) 
-{
+void strtrim(char *string) {
     if (!string || *string == '\0') return;
 
     // Указатель на начало строки без начальных пробелов
@@ -25,8 +24,7 @@ void strtrim(char *string)
     }
 }
 
-int main() 
-{
+int main() {
     char buf[] = "   abc   ";
     printf("<%s>\n", buf); // <   abc   >
     strtrim(buf);
