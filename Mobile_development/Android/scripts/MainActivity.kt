@@ -1,25 +1,26 @@
-package com.example.tictactoe
+package com.tictactoe
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.tictactoe.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val playButton: Button = findViewById(R.id.btn_play)
-        val exitButton: Button = findViewById(R.id.btn_exit)
-
-        playButton.setOnClickListener {
+        binding.startGameButton.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
         }
 
-        exitButton.setOnClickListener {
-            finish()
+        binding.exitButton.setOnClickListener {
+            finish() // Закрыть приложение
         }
     }
 }
