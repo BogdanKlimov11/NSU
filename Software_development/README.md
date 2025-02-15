@@ -5,7 +5,6 @@ ChessGame/
 ├── src/
 │   ├── board/
 │   │   ├── Board.java # логика доски
-│   │   ├── Cell.java # класс для клетки
 │   ├── pieces/
 │   │   ├── Piece.java # абстрактный класс для всех фигур
 │   │   ├── King.java # класс для короля
