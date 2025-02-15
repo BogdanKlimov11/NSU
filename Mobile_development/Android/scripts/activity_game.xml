@@ -3,60 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp"
-    android:background="@android:color/background_light">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Игровое поле"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="20dp"/>
+    android:gravity="center">
 
     <GridLayout
-        android:id="@+id/game_grid"
+        android:id="@+id/gridView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:columnCount="3"
         android:rowCount="3">
 
-        <!-- Кнопки игрового поля 3x3 -->
-        <Button
-            android:id="@+id/btn_00"
-            style="@style/GameButton" />
-        <Button
-            android:id="@+id/btn_01"
-            style="@style/GameButton" />
-        <Button
-            android:id="@+id/btn_02"
-            style="@style/GameButton" />
-        <Button
-            android:id="@+id/btn_10"
-            style="@style/GameButton" />
-        <Button
-            android:id="@+id/btn_11"
-            style="@style/GameButton" />
-        <Button
-            android:id="@+id/btn_12"
-            style="@style/GameButton" />
-        <Button
-            android:id="@+id/btn_20"
-            style="@style/GameButton" />
-        <Button
-            android:id="@+id/btn_21"
-            style="@style/GameButton" />
-        <Button
-            android:id="@+id/btn_22"
-            style="@style/GameButton" />
+        <!-- Ячейки сетки будут добавляться программно -->
     </GridLayout>
 
-    <Button
-        android:id="@+id/btn_restart"
+    <TextView
+        android:id="@+id/gameResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Заново"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"/>
+        android:text="Game Over"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>
