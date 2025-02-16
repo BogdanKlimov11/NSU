@@ -4,8 +4,7 @@
 #include "Board.h"
 #include "Menu.h"
 
-int main(void)
-{
+int main(void) {
     /* Entering game parameters */
     int size;
     size = inputSizeField();
