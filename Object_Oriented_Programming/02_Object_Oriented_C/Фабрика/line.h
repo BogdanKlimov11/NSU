@@ -7,8 +7,8 @@
 #include "line.h"
 
 struct Line {
-	struct Point first;
-	struct Point second;
+    struct Point first;
+    struct Point second;
 };
 
 extern const void *Line;
