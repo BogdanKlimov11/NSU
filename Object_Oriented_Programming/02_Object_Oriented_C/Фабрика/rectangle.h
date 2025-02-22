@@ -5,8 +5,7 @@
 #include "point.h"
 #include "new.h"
 
-struct Rectangle 
-{
+struct Rectangle {
 	struct Point first;
 	struct Point second;
 };
