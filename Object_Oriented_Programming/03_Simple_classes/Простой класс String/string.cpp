@@ -13,47 +13,47 @@ namespace {
 
 //class StringImpl
 class StringImpl {
-    private:
-        char* data_ = nullptr;
-        size_t lenght_{};        // length of string
-        size_t capacity_{};      // size of memory
-        size_t countRef_{};      // reference counter
-    
-        void initialization(const char * str = nullptr, size_t len = 0, size_t capacity = MinCapacity);
-    
-    public:
-        StringImpl();
-        StringImpl(const char* str, size_t n);
-        StringImpl(size_t n, char c);
-        StringImpl(const StringImpl& str, size_t pos, size_t len = npos);
-        virtual ~StringImpl();
-    
-        void reduceRef();
-        void addRef();
-        size_t size() const;
-        size_t capacity() const;
-        void reserve(size_t n = 0);
-        void clear();
-        bool empty() const;
-    
-        char& at(size_t pos);
-        const char& at(size_t pos) const;
-    
-        bool reallocateForReplace(size_t pos, size_t len, size_t strLen);
-        void replace(size_t pos, size_t len, const char* str, size_t strLen);
-        void replace(size_t pos, size_t len, size_t n, char c);
-    
-        const char* data() const;
-    
-        size_t find(const char* str, size_t pos = 0) const;
-        StringImpl substr(size_t pos = 0, size_t len = npos) const;
-        int compare(const StringImpl& str) const;
-        int compare(const char* str) const;
-    
-        static const size_t npos = -1;
-    
-        size_t countRef() const;
-        StringImpl* cloneIfNeed();
+private:
+    char* data_ = nullptr;
+    size_t lenght_{};        // length of string
+    size_t capacity_{};      // size of memory
+    size_t countRef_{};      // reference counter
+
+    void initialization(const char * str = nullptr, size_t len = 0, size_t capacity = MinCapacity);
+
+public:
+    StringImpl();
+    StringImpl(const char* str, size_t n);
+    StringImpl(size_t n, char c);
+    StringImpl(const StringImpl& str, size_t pos, size_t len = npos);
+    virtual ~StringImpl();
+
+    void reduceRef();
+    void addRef();
+    size_t size() const;
+    size_t capacity() const;
+    void reserve(size_t n = 0);
+    void clear();
+    bool empty() const;
+
+    char& at(size_t pos);
+    const char& at(size_t pos) const;
+
+    bool reallocateForReplace(size_t pos, size_t len, size_t strLen);
+    void replace(size_t pos, size_t len, const char* str, size_t strLen);
+    void replace(size_t pos, size_t len, size_t n, char c);
+
+    const char* data() const;
+
+    size_t find(const char* str, size_t pos = 0) const;
+    StringImpl substr(size_t pos = 0, size_t len = npos) const;
+    int compare(const StringImpl& str) const;
+    int compare(const char* str) const;
+
+    static const size_t npos = -1;
+
+    size_t countRef() const;
+    StringImpl* cloneIfNeed();
 };
 
 StringImpl* StringImpl::cloneIfNeed() {
