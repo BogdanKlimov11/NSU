@@ -1,7 +1,7 @@
 #include "gtest.h"
-#include "friend_recommendation.h"
-#include "parser.h"
-#include "writer.h"
+#include "friend_recommendation.hpp"
+#include "parser.hpp"
+#include "writer.hpp"
 
 TEST(FriendRecommendationTest, Filler) {
     std::istringstream ss{
