@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gtest.h"
+#include "gtest/gtest.h"
 #include "string.hpp"
 
 TEST(ConstMethods, DataMet) {
