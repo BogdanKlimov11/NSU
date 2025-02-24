@@ -1,0 +1,6 @@
+20 continuous
+20 broken
+10 changing
+20 continuous
+3 stripes
+20 continuous
