@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "parser.hpp"
 
 std::pair<std::pair<std::string, std::string>, bool> Parser::getNextFriendship() {
     std::string line, uid1, uid2;
