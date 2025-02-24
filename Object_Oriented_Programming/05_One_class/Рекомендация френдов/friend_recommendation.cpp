@@ -1,4 +1,4 @@
-#include "friend_recommendation.h"
+#include "friend_recommendation.hpp"
 
 void FriendRecommendation::friendFiller(Parser & parser) {
     while (true) {
