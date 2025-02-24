@@ -3,9 +3,9 @@
 #include <fstream>
 #include <string>
 
-#include "parser.h"
-#include "friend_recommendation.h"
-#include "writer.h"
+#include "parser.hpp"
+#include "friend_recommendation.hpp"
+#include "writer.hpp"
 
 int main(int argc, char** argv) {
     if (argc < 5) {
