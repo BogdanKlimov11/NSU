@@ -1,0 +1,10 @@
+id1 id2
+id2 id3
+id2 id4 
+id2 id7 abc
+id2 id8
+
+id1 id3
+id1 id1
+id3 id4
+id3 id7
