@@ -1,4 +1,4 @@
-#include "writer.h"
+#include "writer.hpp"
 
 void Writer::writeRecommendedFriends(const std::vector<std::string>& friends) {
     if (friends.empty()) return;
