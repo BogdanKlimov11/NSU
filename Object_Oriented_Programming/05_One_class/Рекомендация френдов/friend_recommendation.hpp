@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "parser.h"
+#include "parser.hpp"
 
 class FriendRecommendation final {
 private:
