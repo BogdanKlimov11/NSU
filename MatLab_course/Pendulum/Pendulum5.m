@@ -1,6 +1,7 @@
-clear
+clear;
+
 x = 0.0; p = 2.5;
-t = 0; dt = 0.05;
+t = 0; dt = 0.01;  % уменьшили шаг времени для более точных расчетов
 k = 0.2;
 
 stop = 1;
@@ -28,17 +29,16 @@ title(['x(t)']);
 grid on; xlabel('t'); ylabel('x = x(t)');
 h3 = animatedline(x,t,'Color','black');
 
-%x = x - p*dt/2;
 while stop && ishghandle(h1)
     t = t + dt;
-    x = x + p*dt;
+    x = x + p * dt;
     if x > pi
-      x = x - 2*pi;
-    end;
+        x = x - 2 * pi;
+    end
     if x < -pi
-        x=x+2* pi ;
-    end;
-    p = p - sin(x)*dt - k*p*dt;
+        x = x + 2 * pi;
+    end
+    p = p - sin(x) * dt - k * p * dt;
     X = sin(x);
     Y = -cos(x);
     addpoints(h1,p,x);
