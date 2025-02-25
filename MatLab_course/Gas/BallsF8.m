@@ -57,7 +57,8 @@ function [x, y, vx, vy] = ballsF8 (n, x, y, vx, vy, dt)
             v0 = v(:, i) - v(:, j);
             rv = r0' * v0 / ((rad(i) + rad(j)) * (rad(i) + rad(j)));
             dv = r0 * rv;
-            v(:, i) = v(:, i) - dv * 2 * m(j) / (m(i) + m(j));  % Изменение скоростей при столкновении шаров
+            % Изменение скоростей при столкновении шаров
+            v(:, i) = v(:, i) - dv * 2 * m(j) / (m(i) + m(j));
             v(:, j) = v(:, j) + dv * 2 * m(i) / (m(i) + m(j));
         end
 
