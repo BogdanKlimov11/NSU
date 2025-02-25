@@ -8,6 +8,7 @@ res_y = res(4);
 set(gcf, 'position', [res_x / 2 + 2, (res_y - res_y * 0.8) / 2, res_y * 0.8, res_y * 0.8]);
 
 global rad lx ly m n;
+
 n = 30;  % Количество шаров
 dt = 0.1;  % Шаг по времени
 tmot = 0;  % Текущее время
