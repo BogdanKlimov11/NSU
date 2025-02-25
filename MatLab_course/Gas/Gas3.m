@@ -1,60 +1,75 @@
-clear; clear global;
-set(0,'units','pixels'); res = get(0,'screensize'); resX = res(3); resY = res(4);
-set(gcf,'position', [resX*.1, (resY - resY*0.8)/2, resX*.9, resY*.8])
+clear;
 
-global rad lx ly m n;
-n = 100;                %ÍÓÎË˜ÂÒÚ‚Ó ¯‡Ó‚
-dt = .1;                %¯‡„ ÔÓ ‚ÂÏÂÌË
-tmot = 0;               %ÚÂÍÛ˘ÂÂ ‚ÂÏˇ
-lx = 200; ly = 200;     %‡ÁÏÂ˚ ·ËÎÎË‡‰‡
-rad(1:n) = 1;           %‡‰ËÛÒ˚ ¯‡Ó‚
-m(1:n) = 1;             %Ï‡ÒÒ˚ ¯‡Ó‚
-g1 = 0.001;             %ÛÒÍÓÂÌËÂ Ò‚Ó·Ó‰ÌÓ„Ó Ô‡‰ÂÌËˇ
-v0 = 100;               %Ì‡˜‡Î¸Ì˚Â ÒÍÓÓÒÚË Ë ÍÓÓ‰ËÌ‡Ú˚ ËÁ set_random.m
-out = set_random(v0);	%Á‡‰‡ÂÏ ÒÎÛ˜‡ÈÌ˚Â ÍÓÓ‰ËÌ‡Ú˚ ˜‡ÒÚËˆ, 
-x = out(1,:);           %ÒÍÓÓÒÚË ‚ÒÂı Ì‡Ô‡‚ÎÂÌ˚ ÔÓ ı Ë ‡‚Ì˚ ‡„ÛÏÂÌÚÛ	
-y = out(2,:);
-vx = out(3,:);
-vy = out(4,:);
-vxmin = min(vx);        %‚˚˜ËÒÎÂÌËÂ ÏËÌËÏ‡Î¸ÌÓ„Ó Ë Ï‡ÍÒËÏ‡Î¸ÌÓ„Ó ÁÌ‡˜ÂÌËˇ 
-vymin = min(vy);
-vxmax = max(vx);
-vymax = max(vy);
-vmin = sqrt(vxmin^2 + vymin^2);
-vmax = sqrt(vxmax^2 + vymax^2);
+set(0, 'units', 'pixels');
+res = get(0, 'screensize');
+res_x = res(3);
+res_y = res(4);
+set(gcf, 'position', [res_x * 0.1, (res_y - res_y * 0.8) / 2, res_x * 0.9, res_y * 0.8]);
 
-bin = 5; E = n*v0*v0/2; border = 2*max(vx);
+% –ò–Ω–∏—Ü–∏–∞–ª–∏–∑–∞—Ü–∏—è –ø–∞—Ä–∞–º–µ—Ç—Ä–æ–≤
+n = 100;  % –ö–æ–ª–∏—á–µ—Å—Ç–≤–æ —à–∞—Ä–æ–≤
+dt = 0.1;  % –®–∞–≥ –ø–æ –≤—Ä–µ–º–µ–Ω–∏
+tmot = 0;  % –¢–µ–∫—É—â–µ–µ –≤—Ä–µ–º—è
+lx = 200; ly = 200;  % –†–∞–∑–º–µ—Ä—ã –æ–±–ª–∞—Å—Ç–∏
+rad(1:n) = 1;  % –†–∞–¥–∏—É—Å—ã —à–∞—Ä–æ–≤
+m(1:n) = 1;  % –ú–∞—Å—Å—ã —à–∞—Ä–æ–≤
+g1 = 0.001;  % –£—Å–∫–æ—Ä–µ–Ω–∏–µ —Å–≤–æ–±–æ–¥–Ω–æ–≥–æ –ø–∞–¥–µ–Ω–∏—è
+v0 = 100;  % –ù–∞—á–∞–ª—å–Ω—ã–µ —Å–∫–æ—Ä–æ—Å—Ç–∏ –∏ –∫–æ–æ—Ä–¥–∏–Ω–∞—Ç—ã –∏–∑ set_random.m
+out = set_random(v0);  % –ì–µ–Ω–µ—Ä–∞—Ü–∏—è —Å–ª—É—á–∞–π–Ω—ã—Ö –∫–æ–æ—Ä–¥–∏–Ω–∞—Ç —á–∞—Å—Ç–∏—Ü
+x = out(1, :);  % –ö–æ–æ—Ä–¥–∏–Ω–∞—Ç—ã –ø–æ x
+y = out(2, :);  % –ö–æ–æ—Ä–¥–∏–Ω–∞—Ç—ã –ø–æ y
+vx = out(3, :);  % –°–∫–æ—Ä–æ—Å—Ç–∏ –ø–æ x
+vy = out(4, :);  % –°–∫–æ—Ä–æ—Å—Ç–∏ –ø–æ y
 
-subplot(1,3,1)
+% –í—ã—á–∏—Å–ª–µ–Ω–∏–µ –º–∏–Ω–∏–º–∞–ª—å–Ω—ã—Ö –∏ –º–∞–∫—Å–∏–º–∞–ª—å–Ω—ã—Ö –∑–Ω–∞—á–µ–Ω–∏–π
+vx_min = min(vx); 
+vy_min = min(vy);
+vx_max = max(vx);
+vy_max = max(vy);
+v_min = sqrt(vx_min^2 + vy_min^2);
+v_max = sqrt(vx_max^2 + vy_max^2);
+
+bin = 5; 
+E = n * v0^2 / 2; 
+border = 2 * max(vx);
+
+% –ü–æ—Å—Ç—Ä–æ–µ–Ω–∏–µ –≥—Ä–∞—Ñ–∏–∫–æ–≤
+subplot(1, 3, 1);
 x_teor = -border:border;
-y_teor = bin*sqrt((1/(2*pi))*(n/E))*exp(-x_teor.^2*n/(2*E));
+y_teor = bin * sqrt((1 / (2 * pi)) * (n / E)) * exp(-x_teor.^2 * n / (2 * E));
 plot(x_teor, y_teor, 'LineWidth', 5); hold on;
 h = histogram(vx, -border:bin:border, 'Normalization', 'probability'); hold off;
 title('Vx');
 
-subplot(1,3,2)
-x_teor = 0:2*border;
-y_teor = x_teor*bin*(n/E).*exp(-x_teor.^2*n/(2*E));
+subplot(1, 3, 2);
+x_teor = 0:2 * border;
+y_teor = x_teor * bin * (n / E) .* exp(-x_teor.^2 * n / (2 * E));
 plot(x_teor, y_teor, 'LineWidth', 5); hold on;
-v = (vx.^(2) + vy.^2).^(1/2);
-h2 = histogram(v, 0:bin:2*border, 'Normalization', 'probability'); hold off;
+v = sqrt(vx.^2 + vy.^2);
+h2 = histogram(v, 0:bin:2 * border, 'Normalization', 'probability'); hold off;
 title('|V|');
 
-subplot(1,3,3)
+subplot(1, 3, 3);
 x_teor = 0:border^2;
-y_teor = 100*bin*(n/E).*exp(-x_teor*n/E);
+y_teor = 100 * bin * (n / E) .* exp(-x_teor * n / E);
 plot(x_teor, y_teor, 'LineWidth', 5); hold on;
-e = (vx.^(2) + vy.^2)/2;
-h3 = histogram(e, 0:100*bin:border^2, 'Normalization', 'probability'); hold off;
+e = (vx.^2 + vy.^2) / 2;
+h3 = histogram(e, 0:100 * bin:border^2, 'Normalization', 'probability'); hold off;
 title('E');
 
-accum = []; accum2 = []; accum3 = []; t = 0;
+% –ò–Ω–∏—Ü–∏–∞–ª–∏–∑–∞—Ü–∏—è –Ω–∞–∫–æ–ø–∏—Ç–µ–ª–µ–π
+accum = []; 
+accum2 = []; 
+accum3 = []; 
+t = 0;
+
+% –û—Å–Ω–æ–≤–Ω–æ–π —Ü–∏–∫–ª
 while ishghandle(h)
     t = t + dt;
-    [x, y, vx, vy] = BallsF8(n,x,y,vx,vy,dt);
-    v = (vx.^(2) + vy.^2).^(1/2);
-    e = (vx.^(2) + vy.^2)/2;
-    if (t > 3) %ÔÓÒÎÂ ÚÂı "ÒÂÍÛÌ‰" ‚ÍÎ˛˜‡ÂÚÒˇ Ì‡ÍÓÔÎÂÌËÂ
+    [x, y, vx, vy] = BallsF8(n, x, y, vx, vy, dt);  % –û–±–Ω–æ–≤–ª–µ–Ω–∏–µ –ø–æ–∑–∏—Ü–∏–π –∏ —Å–∫–æ—Ä–æ—Å—Ç–µ–π
+    v = sqrt(vx.^2 + vy.^2);  % –°–∫–æ—Ä–æ—Å—Ç–∏
+    e = (vx.^2 + vy.^2) / 2;  % –≠–Ω–µ—Ä–≥–∏—è
+    if t > 3  % –ü–æ—Å–ª–µ 3 —Å–µ–∫—É–Ω–¥ –≤–∫–ª—é—á–∞–µ–º –Ω–∞–∫–æ–ø–ª–µ–Ω–∏–µ –¥–∞–Ω–Ω—ã—Ö
         accum = [accum vx];
         accum2 = [accum2 v];
         accum3 = [accum3 e];
@@ -66,6 +81,5 @@ while ishghandle(h)
         h2.Data = v;
         h3.Data = e;
     end;
-    pause(.00001); 
+    pause(0.00001);  % –ó–∞–º–µ–¥–ª–µ–Ω–∏–µ –∞–Ω–∏–º–∞—Ü–∏–∏
 end;
- 
