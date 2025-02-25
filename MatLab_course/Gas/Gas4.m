@@ -1,4 +1,6 @@
-clear; clear global;
+clear;
+clear global;
+
 set(0, 'units', 'pixels'); 
 res = get(0, 'screensize'); 
 resX = res(3); 
