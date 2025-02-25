@@ -1,66 +1,87 @@
-clear; clear global;
-set(0,'units','pixels'); res = get(0,'screensize'); resX = res(3); resY = res(4);
-set(gcf,'position', [resX*.1, (resY - resY*0.8)/2, resX*.9, resY*.8])
+clear;
+clear global;
+
+set(0, 'units', 'pixels');
+res = get(0, 'screensize');
+resX = res(3);
+resY = res(4);
+set(gcf, 'position', [resX * 0.1, (resY - resY * 0.8) / 2, resX * 0.9, resY * 0.8]);
 
 global rad lx ly m n;
-n = 100;                %êîëè÷åñòâî øàðîâ
-dt = .1;                %øàã ïî âðåìåíè
-tmot = 0;               %òåêóùåå âðåìÿ
-lx = 200; ly = 200;     %ðàçìåðû áèëëèàðäà
-rad(1:n) = 1;           %ðàäèóñû øàðîâ
-m(1:n) = 1;             %ìàññû øàðîâ
-g1 = 0.001;             %óñêîðåíèå ñâîáîäíîãî ïàäåíèÿ
-v0 = 100;               %íà÷àëüíûå ñêîðîñòè è êîîðäèíàòû èç set_random.m
-out = set_random(v0);	%çàäàåì ñëó÷àéíûå êîîðäèíàòû ÷àñòèö, 
-x = out(1,:);           %ñêîðîñòè âñåõ íàïðàâëåíû ïî õ è ðàâíû àðãóìåíòó	
-y = out(2,:);
-vx = out(3,:);
-vy = out(4,:);
-vxmin = min(vx);        %âû÷èñëåíèå ìèíèìàëüíîãî è ìàêñèìàëüíîãî çíà÷åíèÿ 
-vymin = min(vy);
-vxmax = max(vx);
-vymax = max(vy);
-vmin = sqrt(vxmin^2 + vymin^2);
-vmax = sqrt(vxmax^2 + vymax^2);
+n = 100;  % ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ñ‡Ð°ÑÑ‚Ð¸Ñ†
+dt = 0.1;  % Ð¨Ð°Ð³ Ð¿Ð¾ Ð²Ñ€ÐµÐ¼ÐµÐ½Ð¸
+tmot = 0;  % Ð¢ÐµÐºÑƒÑ‰ÐµÐµ Ð²Ñ€ÐµÐ¼Ñ
+lx = 200; ly = 200;  % Ð Ð°Ð·Ð¼ÐµÑ€Ñ‹ Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸
+rad(1:n) = 1;  % Ð Ð°Ð´Ð¸ÑƒÑÑ‹ Ñ‡Ð°ÑÑ‚Ð¸Ñ†
+m(1:n) = 1;  % ÐœÐ°ÑÑÑ‹ Ñ‡Ð°ÑÑ‚Ð¸Ñ†
+g1 = 0.001;  % Ð£ÑÐºÐ¾Ñ€ÐµÐ½Ð¸Ðµ Ð³Ñ€Ð°Ð²Ð¸Ñ‚Ð°Ñ†Ð¸Ð¸
+v0 = 100;  % ÐÐ°Ñ‡Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ
+out = set_random(v0);  % Ð—Ð°Ð´Ð°Ñ‘Ð¼ ÑÐ»ÑƒÑ‡Ð°Ð¹Ð½Ñ‹Ðµ Ð½Ð°Ñ‡Ð°Ð»ÑŒÐ½Ñ‹Ðµ ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð¸ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚Ð¸
 
-bin = 5; E = n*v0*v0/2; border = 2*max(vx);
+x = out(1, :);  % ÐšÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð¿Ð¾ Ð¾ÑÐ¸ x
+y = out(2, :);  % ÐšÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð¿Ð¾ Ð¾ÑÐ¸ y
+vx = out(3, :);  % Ð¡ÐºÐ¾Ñ€Ð¾ÑÑ‚Ð¸ Ð¿Ð¾ Ð¾ÑÐ¸ x
+vy = out(4, :);  % Ð¡ÐºÐ¾Ñ€Ð¾ÑÑ‚Ð¸ Ð¿Ð¾ Ð¾ÑÐ¸ y
 
-subplot(1,3,1)
+vxmin = min(vx);  % ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð¿Ð¾ Ð¾ÑÐ¸ x
+vymin = min(vy);  % ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð¿Ð¾ Ð¾ÑÐ¸ y
+vxmax = max(vx);  % ÐœÐ°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð¿Ð¾ Ð¾ÑÐ¸ x
+vymax = max(vy);  % ÐœÐ°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð¿Ð¾ Ð¾ÑÐ¸ y
+vmin = sqrt(vxmin^2 + vymin^2);  % ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ
+vmax = sqrt(vxmax^2 + vymax^2);  % ÐœÐ°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ
+
+bin = 5;
+E = n * v0^2 / 2;
+border = 2 * max(vx);
+
+subplot(1, 3, 1);
 x_teor = -border:border;
-y_teor = bin*sqrt((1/(2*pi))*(n/E))*exp(-x_teor.^2*n/(2*E));
-plot(x_teor, y_teor, 'LineWidth', 5); hold on;
-h = histogram(vx, -border:bin:border, 'Normalization', 'probability'); hold off;
+y_teor = bin * sqrt((1 / (2 * pi)) * (n / E)) * exp(-x_teor.^2 * n / (2 * E));
+plot(x_teor, y_teor, 'LineWidth', 5);
+hold on;
+h = histogram(vx, -border:bin:border, 'Normalization', 'probability');
+hold off;
 title('Vx');
 
-subplot(1,3,2)
-x_teor = 0:2*border;
-y_teor = x_teor*bin*(n/E).*exp(-x_teor.^2*n/(2*E));
-plot(x_teor, y_teor, 'LineWidth', 5); hold on;
-v = (vx.^(2) + vy.^2).^(1/2);
-h2 = histogram(v, 0:bin:2*border, 'Normalization', 'probability'); hold off;
+subplot(1, 3, 2);
+x_teor = 0:2 * border;
+y_teor = x_teor * bin * (n / E) .* exp(-x_teor.^2 * n / (2 * E));
+plot(x_teor, y_teor, 'LineWidth', 5);
+hold on;
+v = sqrt(vx.^2 + vy.^2);
+h2 = histogram(v, 0:bin:2 * border, 'Normalization', 'probability');
+hold off;
 title('|V|');
 
-s = subplot(1,3,3)
+s = subplot(1, 3, 3);
 x_teor = 0:border^2;
-y_teor = 100*bin*(n/E).*exp(-x_teor*n/E);
-plot(x_teor, y_teor, 'LineWidth', 5); hold on;
-e = (vx.^(2) + vy.^2)/2;
-h3 = histogram(e, 0:100*bin:border^2, 'Normalization', 'probability'); hold off;
+y_teor = 100 * bin * (n / E) .* exp(-x_teor * n / E);
+plot(x_teor, y_teor, 'LineWidth', 5);
+hold on;
+e = (vx.^2 + vy.^2) / 2;
+h3 = histogram(e, 0:100 * bin:border^2, 'Normalization', 'probability');
+hold off;
 title('E');
 
-accum = []; accum2 = []; accum3 = []; t = 0;
+accum = [];
+accum2 = [];
+accum3 = [];
+t = 0;
+
 while ishghandle(h)
     t = t + dt;
-    [x, y, vx, vy] = BallsF8(n,x,y,vx,vy,dt);
-    v = (vx.^(2) + vy.^2).^(1/2);
-    e = (vx.^(2) + vy.^2)/2;
-    E = sum(e)/n*1.67e-27;
-    timelabel = ['E = ',num2str(E,'%g'),' J, T = 2E/3k = ',num2str((2*E)/(3*1.38e-23),'%g')];
-    title(s,timelabel)
-    if (t > 3) %ïîñëå òðåõ "ñåêóíä" âêëþ÷àåòñÿ íàêîïëåíèå
-        accum = [accum vx];
-        accum2 = [accum2 v];
-        accum3 = [accum3 e];
+    [x, y, vx, vy] = BallsF8(n, x, y, vx, vy, dt);
+    
+    v = sqrt(vx.^2 + vy.^2);
+    e = (vx.^2 + vy.^2) / 2;
+    E = sum(e) / n * 1.67e-27;
+    timelabel = ['E = ', num2str(E, '%g'), ' J, T = 2E/3k = ', num2str((2 * E) / (3 * 1.38e-23), '%g')];
+    title(s, timelabel);
+    
+    if t > 3
+        accum = [accum, vx];
+        accum2 = [accum2, v];
+        accum3 = [accum3, e];
         h.Data = accum;
         h2.Data = accum2;
         h3.Data = accum3;
@@ -68,7 +89,7 @@ while ishghandle(h)
         h.Data = vx;
         h2.Data = v;
         h3.Data = e;
-    end;
-    pause(.00001); 
+    end
+    
+    pause(0.00001);
 end;
- 
