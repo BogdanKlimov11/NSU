@@ -9,9 +9,9 @@ set (gca ,'ButtonDownFcn','stop = 0;');
 set(0,'units','pixels'); res = get(0,'screensize');
 resX = res(3); resY = res(4);
 set(gcf,'position', [resX/2-resX/6, resY/2-resY/4, resX/3, resY/2])
-h = animatedline(x, y, 'color', 'k'); %Траектория
-hp = animatedline(x, y, 'color', 'b', 'marker', 'o', 'markersize', 5); %Планета
-hS = line(0, 0, 'color', 'r', 'marker', 'pentagram', 'markersize', 7); %Центр поля
+h = animatedline(x, y, 'color', 'k'); % РўСЂР°РµРєС‚РѕСЂРёСЏ
+hp = animatedline(x, y, 'color', 'b', 'marker', 'o', 'markersize', 5); % РџР»Р°РЅРµС‚Р°
+hS = line(0, 0, 'color', 'r', 'marker', 'pentagram', 'markersize', 7); % Р¦РµРЅС‚СЂ РїРѕР»СЏ
 g = 2; axis([-g g -g g]); axis square; box on;
 set(gca, 'xtick', [], 'ytick', []);
 R = R - V*dt/2;
@@ -22,7 +22,7 @@ clearpoints(h_center); clearpoints(h_ogib);
 r = sqrt(R*R'); r1 = r; r2 = r; half = r/2; Xs = []; Ys = []; i = 0;
 while ishghandle(h) && stop
 clearpoints(hp);
-R = R + V*dt; %Радиус-вектор
+R = R + V*dt; % Р Р°РґРёСѓСЃ-РІРµРєС‚РѕСЂ
 r2 = r1; r1 = r;
 r = sqrt(R*R');
 Xs = [Xs R(1)]; Ys = [Ys R(2)]; 
@@ -35,7 +35,7 @@ if (r2 - r1)*(r1 - r) < 0
         Xs = []; Ys = [];
     end;
 end;
-A = -alpha*R/r^3 - 2*beta*R/r^4; %Ускорение
+A = -alpha*R/r^3 - 2*beta*R/r^4; % РЈСЃРєРѕСЂРµРЅРёРµ
 V = V + A*dt; x = R(1); y = R(2);
 addpoints(h, x, y); addpoints(hp, x, y);
 drawnow
