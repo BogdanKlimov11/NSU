@@ -1,32 +1,63 @@
 % Солнце, Земля, Луна
 clear;
-alpha = 10; beta = .5;
-dt = 0.05;
-x1 = 0; y1 = 10; R1 = [x1 y1]; V1 = [1.3 0];
-x2 = 1; y2 = 10; R2 = [x2 y2]; V2 = [1.3 .7];
 
-stop = 1; set(gca,'ButtonDownFcn','stop = 0;');
-set(0,'units','pixels'); res = get(0,'screensize'); resX = res(3); resY = res(4);
-set(gcf,'position', [resX/2-resX/6, resY/2-resY/4, resX/3, resY/2])
+alpha = 10;
+beta = 0.5;
+dt = 0.05;
+
+x1 = 0; y1 = 10; r1 = [x1 y1]; v1 = [1.3 0];
+x2 = 1; y2 = 10; r2 = [x2 y2]; v2 = [1.3 0.7];
+
+stop = 1;
+set(gca, 'ButtonDownFcn', 'stop = 0;');
+set(0, 'units', 'pixels');
+res = get(0, 'screensize');
+res_x = res(3);
+res_y = res(4);
+set(gcf, 'position', [res_x / 2 - res_x / 6, res_y / 2 - res_y / 4, res_x / 3, res_y / 2]);
 
 h1 = animatedline(x1, y1, 'color', 'k');
 hp1 = animatedline(x1, y1, 'color', 'k', 'marker', 'o', 'markersize', 5);
 h2 = animatedline(x2, y2, 'color', 'b');
 hp2 = animatedline(x2, y2, 'color', 'b', 'marker', 'o', 'markersize', 5);
-hS = line(0, 0, 'color', 'r', 'marker', 'pentagram', 'markersize', 7);
-g = 60; axis([-g/2 g/2 -g g/3]); axis square; box on;
+h_s = line(0, 0, 'color', 'r', 'marker', 'pentagram', 'markersize', 7);
+
+g = 60;
+axis([-g / 2 g / 2 -g g / 3]);
+axis square;
+box on;
 set(gca, 'xtick', [], 'ytick', []);
 
-R1 = R1 - V1*dt/2; R2 = R2 - V2*dt/2;
+r1 = r1 - v1 * dt / 2;
+r2 = r2 - v2 * dt / 2;
+
 while ishghandle(h1) && stop
-    clearpoints(hp1); clearpoints(hp2);
-    R1 = R1 + V1*dt; R2 = R2 + V2*dt; delta_R = R2 - R1;
-    r1 = sqrt(R1*R1'); r2 = sqrt(R2*R2'); delta_r = sqrt(delta_R*delta_R');
-    A1 = -alpha*R1/r1^3 - beta*(R1-R2)/delta_r^3*0;
-    A2 = -alpha*R2/r2^3 - beta*delta_R/delta_r^3;
-    V1 = V1 + A1*dt; x1 = R1(1); y1 = R1(2);
-    V2 = V2 + A2*dt; x2 = R2(1); y2 = R2(2);
-    addpoints(h1, x1, y1); addpoints(hp1, x1, y1);
-    addpoints(h2, x2, y2); addpoints(hp2, x2, y2);
-    drawnow
+    clearpoints(hp1);
+    clearpoints(hp2);
+    
+    r1 = r1 + v1 * dt;
+    r2 = r2 + v2 * dt;
+    delta_r = r2 - r1;
+    
+    dist_r1 = sqrt(r1 * r1');
+    dist_r2 = sqrt(r2 * r2');
+    delta_dist = sqrt(delta_r * delta_r');
+    
+    a1 = -alpha * r1 / dist_r1^3 - beta * (r1 - r2) / delta_dist^3 * 0;
+    a2 = -alpha * r2 / dist_r2^3 - beta * delta_r / delta_dist^3;
+    
+    v1 = v1 + a1 * dt;
+    x1 = r1(1);
+    y1 = r1(2);
+    
+    v2 = v2 + a2 * dt;
+    x2 = r2(1);
+    y2 = r2(2);
+    
+    addpoints(h1, x1, y1);
+    addpoints(hp1, x1, y1);
+    addpoints(h2, x2, y2);
+    addpoints(hp2, x2, y2);
+    
+    drawnow;
 end
