@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "Board.h"
+#include "board.h"
 
 /* Initializing the playing field */
 void initBoard(int size,cell board[size][size]) {
