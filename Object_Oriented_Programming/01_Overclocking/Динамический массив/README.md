@@ -5,7 +5,8 @@
 Строго заданный интерфейс:
 
 ```c
-// Файл 'darray.h'
+//darray.h
+
 #include <stdbool.h> // bool
 #include <stddef.h>  // size_t
 
