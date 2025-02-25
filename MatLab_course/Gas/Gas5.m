@@ -1,68 +1,75 @@
- clear; clear global;
-set(0,'units','pixels'); res = get(0,'screensize'); resX = res(3); resY = res(4);
-set(gcf,'position', [(resX-resY*1.6)+2, (resY - resY*0.8)/2, resY*1.6, resY*0.8])
+clear;
+clear global;
+
+set(0, 'units', 'pixels'); 
+res = get(0, 'screensize'); 
+resX = res(3); 
+resY = res(4);
+set(gcf, 'position', [(resX - resY * 1.6) + 2, (resY - resY * 0.8) / 2, resY * 1.6, resY * 0.8])
 
 global rad lx ly m n;
-n = 20;                %êîëè÷åñòâî øàðîâ
-dt = .1;                %øàã ïî âðåìåíè
-tmot = 0;               %òåêóùåå âðåìÿ
-lx = 200; ly = 200;     %ðàçìåðû áèëëèàðäà
-rad(1:n) = 10;           %ðàäèóñû øàðîâ
-m(1:n) = 1;             %ìàññû øàðîâ
-g1 = 0.001;             %óñêîðåíèå ñâîáîäíîãî ïàäåíèÿ
-v0 = 10;               %íà÷àëüíûå ñêîðîñòè è êîîðäèíàòû èç set_random.m
-out = set_random(v0);	%çàäàåì ñëó÷àéíûå êîîðäèíàòû ÷àñòèö, 
-x = out(1,:);           %ñêîðîñòè âñåõ íàïðàâëåíû ïî õ è ðàâíû àðãóìåíòó	
-y = out(2,:);
-vx = out(3,:);
-vy = out(4,:);
-vxmin = min(vx);        %âû÷èñëåíèå ìèíèìàëüíîãî è ìàêñèìàëüíîãî çíà÷åíèÿ 
+n = 20;  % ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ñ‡Ð°ÑÑ‚Ð¸Ñ†
+dt = 0.1;  % Ð¨Ð°Ð³ Ð¿Ð¾ Ð²Ñ€ÐµÐ¼ÐµÐ½Ð¸
+tmot = 0;  % Ð¢ÐµÐºÑƒÑ‰ÐµÐµ Ð²Ñ€ÐµÐ¼Ñ
+lx = 200; ly = 200;  % Ð Ð°Ð·Ð¼ÐµÑ€Ñ‹ Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸
+rad(1:n) = 10;  % Ð Ð°Ð´Ð¸ÑƒÑÑ‹ Ñ‡Ð°ÑÑ‚Ð¸Ñ†
+m(1:n) = 1;  % ÐœÐ°ÑÑÑ‹ Ñ‡Ð°ÑÑ‚Ð¸Ñ†
+g1 = 0.001;  % Ð£ÑÐºÐ¾Ñ€ÐµÐ½Ð¸Ðµ Ð³Ñ€Ð°Ð²Ð¸Ñ‚Ð°Ñ†Ð¸Ð¸
+v0 = 10;  % ÐÐ°Ñ‡Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð¸ ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚Ñ‹ Ð¸Ð· set_random.m
+out = set_random(v0);  % Ð—Ð°Ð´Ð°Ñ‘Ð¼ ÑÐ»ÑƒÑ‡Ð°Ð¹Ð½Ñ‹Ðµ Ð½Ð°Ñ‡Ð°Ð»ÑŒÐ½Ñ‹Ðµ ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ñ‡Ð°ÑÑ‚Ð¸Ñ†,
+x = out(1, :);  % Ð¡ÐºÐ¾Ñ€Ð¾ÑÑ‚Ð¸ Ð²ÑÐµÑ… Ñ‡Ð°ÑÑ‚Ð¸Ñ† Ð¿Ð¾ Ð¾ÑÑÐ¼ x Ð¸ y
+y = out(2, :);
+vx = out(3, :);
+vy = out(4, :);
+
+% ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ Ð¸ Ð¼Ð°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð¿Ð¾ Ð¾ÑÑÐ¼ x Ð¸ y
+vxmin = min(vx);
 vymin = min(vy);
 vxmax = max(vx);
 vymax = max(vy);
+
 vmin = sqrt(vxmin^2 + vymin^2);
 vmax = sqrt(vxmax^2 + vymax^2);
 
-coordsX = [0,lx,lx,0, 0];
-coordsY = [0,0,ly,ly, 0];
+coordsX = [0, lx, lx, 0, 0];
+coordsY = [0, 0, ly, ly, 0];
 
-subplot(1,2,1)
+subplot(1, 2, 1)
 p = animatedline(coordsX, coordsY, 'Color', 'b');
-h = animatedline(x,y);
-set(h,'LineStyle','none','color','k','Marker','o','MarkerSize',2.1*rad(1));
-axis([0, 2*lx, -ly/2, 3*ly/2]);
+h = animatedline(x, y);
+set(h, 'LineStyle', 'none', 'color', 'k', 'Marker', 'o', 'MarkerSize', 2.1 * rad(1));
+axis([0, 2 * lx, -ly / 2, 3 * ly / 2]);
 axis('square');
 
-s = subplot(1,2,2);
+s = subplot(1, 2, 2);
 E = 0; t = 0;
 for i = 1:n
-    E = E + vx(i)^2/2 + vy(i)^2/2;
+    E = E + vx(i)^2 / 2 + vy(i)^2 / 2;
 end;
 %e = E/n;
 
 hE = animatedline(t, E, 'color', 'k');
 %he = animatedline(t, 0, 'color', 'blue', 'LineWidth', 2);
-timelabel = ['t = ',num2str(t,'%.2f'),' s'];
+timelabel = ['t = ', num2str(t, '%.2f'), ' s'];
 t_title = title(timelabel);
 
-U = 50; T = 100/U; T_counter = 0; counter = 0; vx = vx - U;
+U = 50; T = 100 / U; T_counter = 0; counter = 0; vx = vx - U;
 while ishghandle(h)
     if (T_counter >= T)
         T_counter = 0; U = -U;
-        vx = vx - 2*U;
+        vx = vx - 2 * U;
     end;
-    coordsX = coordsX + U*dt; clearpoints(p); addpoints(p,coordsX,coordsY);
+    coordsX = coordsX + U * dt; clearpoints(p); addpoints(p, coordsX, coordsY);
     t = t + dt; T_counter = T_counter + dt;
     E = 0;
-    [x, y, vx, vy] = BallsF8(n,x,y,vx,vy,dt);
+    [x, y, vx, vy] = BallsF8(n, x, y, vx, vy, dt);
     for i = 1:n
-        E = E + (vx(i) + U)^2/2 + vy(i)^2/2;
+        E = E + (vx(i) + U)^2 / 2 + vy(i)^2 / 2;
     end;
     %e = E/n;
-    clearpoints(h); addpoints(h,(x+coordsX(1)),y);
-    addpoints(hE,t,E); %addpoints(he,t,e);
-    timelabel = ['t = ',num2str(t,'%.2f'),' s'];
-    title(s,timelabel)
-    pause(.00001);
+    clearpoints(h); addpoints(h, (x + coordsX(1)), y);
+    addpoints(hE, t, E); %addpoints(he, t, e);
+    timelabel = ['t = ', num2str(t, '%.2f'), ' s'];
+    title(s, timelabel)
+    pause(0.00001);
 end;
- 
