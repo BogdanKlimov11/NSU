@@ -8,6 +8,7 @@ resY = res(4);
 set(gcf, 'position', [(resX - resY * 1.6) + 2, (resY - resY * 0.8) / 2, resY * 1.6, resY * 0.8])
 
 global rad lx ly m n;
+
 n = 20;  % Количество частиц
 dt = 0.1;  % Шаг по времени
 tmot = 0;  % Текущее время
