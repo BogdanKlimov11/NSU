@@ -1,76 +1,92 @@
-clear; clear global;
-set(0,'units','pixels'); res = get(0,'screensize'); resX = res(3); resY = res(4);
-set(gcf,'position', [(resX-resY*1.6)+2, (resY - resY*0.8)/2, resY*1.6, resY*0.8])
+clear;
+clear global;
+
+set(0, 'units', 'pixels'); 
+res = get(0, 'screensize'); 
+resX = res(3); resY = res(4);
+set(gcf, 'position', [(resX - resY*1.6) + 2, (resY - resY*0.8)/2, resY*1.6, resY*0.8])
 
 global rad lx ly m n;
-n = 100;                %количество шаров
-dt = .1;                %шаг по времени
-tmot = 0;               %текущее время
-lx = 200; ly = 200;     %размеры биллиарда
-rad(1:n) = 1;           %радиусы шаров
-m(1:n) = 1;             %массы шаров
-g1 = 0.001;             %ускорение свободного падения
-v0 = 100;               %начальные скорости и координаты из set_random.m
-out = set_random(v0);	%задаем случайные координаты частиц, 
-x = out(1,:);           %скорости всех направлены по х и равны аргументу	
-y = out(2,:);
-vx = out(3,:);
-vy = out(4,:);
-vxmin = min(vx);        %вычисление минимального и максимального значения 
-vymin = min(vy);
-vxmax = max(vx);
-vymax = max(vy);
-vmin = sqrt(vxmin^2 + vymin^2);
-vmax = sqrt(vxmax^2 + vymax^2);
 
-coordsX = [0,lx,lx,0, 0];
-coordsY = [0,0,ly,ly, 0];
+n = 100;  % РљРѕР»РёС‡РµСЃС‚РІРѕ С‡Р°СЃС‚РёС†
+dt = .1;  % РЁР°Рі РїРѕ РІСЂРµРјРµРЅРё
+tmot = 0;  % РўРµРєСѓС‰РёРµ РІСЂРµРјСЏ
+lx = 200; ly = 200;  % Р Р°Р·РјРµСЂС‹ РѕР±Р»Р°СЃС‚Рё
+rad(1:n) = 1;  % Р Р°РґРёСѓСЃС‹ С‡Р°СЃС‚РёС†
+m(1:n) = 1;  % РњР°СЃСЃС‹ С‡Р°СЃС‚РёС†
+g1 = 0.001;  % РљРѕРЅСЃС‚Р°РЅС‚Р° РґР»СЏ СЃРёР»С‹ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёСЏ
+v0 = 100;  % РќР°С‡Р°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РёР· Set_random.m
+out = set_random(v0);  % Р“РµРЅРµСЂР°С†РёСЏ СЃР»СѓС‡Р°Р№РЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚ Рё СЃРєРѕСЂРѕСЃС‚РµР№
+x = out(1,:);  % РљРѕРѕСЂРґРёРЅР°С‚С‹ РїРѕ РѕСЃРё x
+y = out(2,:);  % РљРѕРѕСЂРґРёРЅР°С‚С‹ РїРѕ РѕСЃРё y
+vx = out(3,:);  % РЎРєРѕСЂРѕСЃС‚Рё РїРѕ РѕСЃРё x
+vy = out(4,:);  % РЎРєРѕСЂРѕСЃС‚Рё РїРѕ РѕСЃРё y
+vxmin = min(vx);  % РњРёРЅРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїРѕ РѕСЃРё x
+vymin = min(vy);  % РњРёРЅРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїРѕ РѕСЃРё y
+vxmax = max(vx);  % РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїРѕ РѕСЃРё x
+vymax = max(vy);  % РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїРѕ РѕСЃРё y
+vmin = sqrt(vxmin^2 + vymin^2); % РњРёРЅРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ
+vmax = sqrt(vxmax^2 + vymax^2); % РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ
 
-subplot(1,2,1)
-q = quiver(100,100,0,0, 'Color', 'b', 'LineWidth', 5, 'MaxHeadSize', 10); hold on;
-h = animatedline(x,y); hold off;
-set(h,'LineStyle','none','color','k','Marker','o','MarkerSize',5*rad(1));
+coordsX = [0, lx, lx, 0, 0];
+coordsY = [0, 0, ly, ly, 0];
+
+subplot(1, 2, 1)
+q = quiver(100, 100, 0, 0, 'Color', 'b', 'LineWidth', 5, 'MaxHeadSize', 10); 
+hold on;
+h = animatedline(x, y); 
+hold off;
+set(h, 'LineStyle', 'none', 'color', 'k', 'Marker', 'o', 'MarkerSize', 5 * rad(1));
 axis([0, lx, 0, ly]);
 axis('square');
 
-s = subplot(1,2,2);
+s = subplot(1, 2, 2);
 E = 0; t = 0;
+
+% Р Р°СЃС‡С‘С‚ РЅР°С‡Р°Р»СЊРЅРѕР№ СЌРЅРµСЂРіРёРё СЃРёСЃС‚РµРјС‹
 for i = 1:n
-    E = E + vx(i)^2/2 + vy(i)^2/2;
+    E = E + vx(i)^2 / 2 + vy(i)^2 / 2;
 end;
+
 hE = animatedline(t, E, 'color', 'k');
-timelabel = ['t = ',num2str(t,'%.2f'),' s'];
+timelabel = ['t = ', num2str(t, '%.2f'), ' s'];
 t_title = title(timelabel);
 
-for j = 1:(10/dt)
+% РћСЃРЅРѕРІРЅРѕР№ С†РёРєР» РјРѕРґРµР»РёСЂРѕРІР°РЅРёСЏ
+for j = 1:(10 / dt)
     t = t + dt;
     E = 0;
-    [x, y, vx, vy] = BallsF8(n,x,y,vx,vy,dt);
+    [x, y, vx, vy] = BallsF8(n, x, y, vx, vy, dt);
     for i = 1:n
-        E = E + (vx(i))^2/2 + vy(i)^2/2;
+        E = E + (vx(i))^2 / 2 + vy(i)^2 / 2;
     end;
-    clearpoints(h); addpoints(h,x,y);
-    addpoints(hE,t,E);
-    timelabel = ['t = ',num2str(t,'%.2f'),' s'];
-    title(s,timelabel);
-    axis(s,[0 t 0 1.5*E])
+    clearpoints(h); 
+    addpoints(h, x, y);
+    addpoints(hE, t, E);
+    timelabel = ['t = ', num2str(t, '%.2f'), ' s'];
+    title(s, timelabel);
+    axis(s, [0 t 0 1.5 * E])
     pause(.00001);
 end;
+
 set(q, 'Visible', 'on');
 while ishghandle(h)
-    Ux = sum(vx)/n; Uy = sum(vy)/n; set(q, 'Udata', 5*Ux, 'Vdata', 5*Uy);
-    vx = vx - Ux; vy = vy - Uy;
+    Ux = sum(vx) / n; 
+    Uy = sum(vy) / n; 
+    set(q, 'Udata', 5 * Ux, 'Vdata', 5 * Uy);
+    vx = vx - Ux; 
+    vy = vy - Uy;
     t = t + dt;
     E = 0;
-    [x, y, vx, vy] = BallsF8(n,x,y,vx,vy,dt);
+    [x, y, vx, vy] = BallsF8(n, x, y, vx, vy, dt);
     for i = 1:n
-        E = E + (vx(i))^2/2 + vy(i)^2/2;
+        E = E + (vx(i))^2 / 2 + vy(i)^2 / 2;
     end;
-    clearpoints(h); addpoints(h,x,y);
-    addpoints(hE,t,E);
-    timelabel = ['t = ',num2str(t,'%.2f'),' s'];
-    title(s,timelabel);
-    axis(s,[0 t 0 10*E])
+    clearpoints(h); 
+    addpoints(h, x, y);
+    addpoints(hE, t, E);
+    timelabel = ['t = ', num2str(t, '%.2f'), ' s'];
+    title(s, timelabel);
+    axis(s, [0 t 0 10 * E])
     pause(.00001);
 end;
- 
