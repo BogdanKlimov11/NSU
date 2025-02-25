@@ -1,4 +1,5 @@
 clear;
+
 x = 0.0; p = 1.5; E = p*p/2 + 1 - cos(x); Emax = E; Emin = E; dE = 0;
 t = 0; dt = 0.01;
 
