@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Board.h"
-#include "Menu.h"
+#include "board.h"
+#include "menu.h"
 
 int main(void) {
     /* Entering game parameters */
