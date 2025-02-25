@@ -16,7 +16,7 @@ h = animatedline(x, f, 'Color', 'black');
 
 for xmax = 0.01:0.01:3.14
     x = xmax;
-    t = 0; % Сброс времени для каждого xmax
+    t = 0;  % Сброс времени для каждого xmax
     while stop && ishghandle(h)
         t = t + dt;
         x = x + p * dt;
