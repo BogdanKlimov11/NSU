@@ -30,8 +30,8 @@ while ishghandle(h1) && stop
 clearpoints(hp1); clearpoints(hp2); clearpoints(gp2);
 R1 = R1 + V1*dt; R2 = R2 + V2*dt;
 r1 = sqrt(R1*R1'); r2 = sqrt(R2*R2');
-A1 = -alpha*R1/r1^3 - 2*beta*R1/abs(r2-r1)^3; % Неправильно
-A2 = -alpha*R2/r2^3 - 2*beta*R2/abs(r2-r1)^3; % в field5dop исправлено
+A1 = -alpha*R1/r1^3 - 2*beta*R1/abs(r2-r1)^3; % РќРµРїСЂР°РІРёР»СЊРЅРѕ
+A2 = -alpha*R2/r2^3 - 2*beta*R2/abs(r2-r1)^3; % Р’ Field5dop РёСЃРїСЂР°РІР»РµРЅРѕ
 V1 = V1 + A1*dt; x1 = R1(1); y1 = R1(2);
 V2 = V2 + A2*dt; x2 = R2(1); y2 = R2(2);
 addpoints(h1, x1, y1); addpoints(hp1, x1, y1);
