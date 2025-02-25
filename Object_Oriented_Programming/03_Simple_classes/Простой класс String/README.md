@@ -26,6 +26,7 @@
 
 ```c++
 //string.hpp
+
 class String {
 public:
     String();
