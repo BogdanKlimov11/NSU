@@ -10,7 +10,10 @@ def substring_search(text: str, pattern: str) -> List[int]:
 ```
 
 ```c
-
+void substring_search(const char *text, const char *pattern)
+{
+    /* .... */
+}
 ```
 
 где
