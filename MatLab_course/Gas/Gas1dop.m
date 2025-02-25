@@ -1,73 +1,89 @@
-clear; clear global;
-set(0,'units','pixels'); res = get(0,'screensize'); resX = res(3); resY = res(4);
-set(gcf,'position', [resX/2+2, (resY - resY*0.8)/2, resY*0.8, resY*0.8])
+clear;
+clear global;
+
+set(0, 'units', 'pixels');
+res = get(0, 'screensize');
+res_x = res(3);
+res_y = res(4);
+set(gcf, 'position', [res_x / 2 + 2, (res_y - res_y * 0.8) / 2, res_y * 0.8, res_y * 0.8]);
 
 global rad lx ly m n;
-n = 30;                 %количество шаров
-dt = .1;               %шаг по времени
-tmot = 0;               %текущее время
-lx = 200; ly = 200;     %размеры биллиарда
-rad(1:n) = 5;           %радиусы шаров
-m(1:n) = 1;             %массы шаров
-g1 = 0.001;             %ускорение свободного падениЯ
-v0 = 100;               %начальные скорости и координаты из set_random.m
-out = set_random(v0);	%задаем случайные координаты частиц, 
-x = out(1,:);           %скорости всех направлены по х и равны аргументу	
-y = out(2,:);
-vx = out(3,:);
-vy = out(4,:);
-vxmin = min(vx);        %вычисление минимального и максимального значения 
+n = 30;  % РљРѕР»РёС‡РµСЃС‚РІРѕ С€Р°СЂРѕРІ
+dt = 0.1;  % РЁР°Рі РїРѕ РІСЂРµРјРµРЅРё
+tmot = 0;  % РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ
+lx = 200; ly = 200;  % Р Р°Р·РјРµСЂС‹ Р±РёР»СЊСЏСЂРґР°
+rad(1:n) = 5;  % Р Р°РґРёСѓСЃС‹ С€Р°СЂРѕРІ
+m(1:n) = 1;  % РњР°СЃСЃС‹ С€Р°СЂРѕРІ
+g1 = 0.001;  % РЈСЃРєРѕСЂРµРЅРёРµ СЃРІРѕР±РѕРґРЅРѕРіРѕ РїР°РґРµРЅРёСЏ
+v0 = 100;  % РќР°С‡Р°Р»СЊРЅС‹Рµ СЃРєРѕСЂРѕСЃС‚Рё Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ РёР· set_random.m
+out = set_random(v0);  % Р—Р°РґР°РµРј СЃР»СѓС‡Р°Р№РЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‡Р°СЃС‚РёС†
+x = out(1, :);  % РЎРєРѕСЂРѕСЃС‚Рё РІСЃРµС… РЅР°РїСЂР°РІР»РµРЅС‹ РїРѕ С… Рё СЂР°РІРЅС‹ Р°СЂРіСѓРјРµРЅС‚Сѓ
+y = out(2, :);
+vx = out(3, :);
+vy = out(4, :);
+% РњРёРЅРёРјР°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ СЃРєРѕСЂРѕСЃС‚Рё РїРѕ x Рё y
+vxmin = min(vx);
 vymin = min(vy);
+% РњР°РєСЃРёРјР°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ СЃРєРѕСЂРѕСЃС‚Рё РїРѕ x Рё y
 vxmax = max(vx);
 vymax = max(vy);
+
 vmin = sqrt(vxmin^2 + vymin^2);
 vmax = sqrt(vxmax^2 + vymax^2);
 
-s = subplot(1,1,1)
-h = animatedline(0, 0, 'color','k'); clearpoints(h);
+s = subplot(1, 1, 1);
+h = animatedline(0, 0, 'color', 'k');
+clearpoints(h);
 grid on;
-t = 0; 
+t = 0;
 
-step = 100; N = step;
+step = 100;
+N = step;
 for n = 100:-1:10
-    n = n
     check = 0;
     rad = []; rad(1:n) = 5;
     m = []; m(1:n) = 1;
     out = set_random(v0);
-    x = out(1,:);
-    y = out(2,:);
-    vx = out(3,:);
-    vy = out(4,:);
+    x = out(1, :);
+    y = out(2, :);
+    vx = out(3, :);
+    vy = out(4, :);
+
     while check == 0 && ishghandle(h)
-        counter = 0; A = []; t = 0;
+        counter = 0;
+        A = [];
+        t = 0;
         while ishghandle(h) && counter < N
             t = t + dt;
             counter = counter + 1;
-            [x, y, vx, vy] = BallsF8(n,x,y,vx,vy,dt);
+            [x, y, vx, vy] = BallsF8(n, x, y, vx, vy, dt);
             A = [A (x(1)^2 + y(1)^2)];
             pause(0.000001);
-            timelabel = ['t = ',num2str(t,'%.2f'),' s'];
-            title(s,timelabel)
-        end;
-        vx = -vx; vy = -vy; % развернули
+            timelabel = ['t = ', num2str(t, '%.2f'), ' s'];
+            title(s, timelabel);
+        end
+        % Р Р°Р·РІРѕСЂРѕС‚ СЃРєРѕСЂРѕСЃС‚Рё
+        vx = -vx;
+        vy = -vy;
+
         while ishghandle(h) && counter > 1
             t = t + dt;
             counter = counter - 1;
-            [x, y, vx, vy] = BallsF8(n,x,y,vx,vy,dt);
+            [x, y, vx, vy] = BallsF8(n, x, y, vx, vy, dt);
             delta = (x(1)^2 + y(1)^2) - A(counter);
             if (delta > 0.01)
-                delta = delta
-                addpoints(h, n, (N-counter)*dt);
+                delta = delta;
+                addpoints(h, n, (N - counter) * dt);
                 check = 1;
                 break;
-            end;
+            end
             pause(0.000001);
-            timelabel = ['t = ',num2str(t,'%.2f'),' s'];
-            title(s,timelabel)
-        end;
+            timelabel = ['t = ', num2str(t, '%.2f'), ' s'];
+            title(s, timelabel);
+        end
+
         if check == 0
-            N = N + step % шагов туда, потом столько же обратно
-        end;
+            N = N + step;  % РЈРІРµР»РёС‡РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ С€Р°РіРѕРІ, РїРѕРєР° РЅРµ РїРѕР»СѓС‡РёРј РїРѕРґС…РѕРґСЏС‰РµРµ Р·РЅР°С‡РµРЅРёРµ
+        end
     end
-end;
+end
