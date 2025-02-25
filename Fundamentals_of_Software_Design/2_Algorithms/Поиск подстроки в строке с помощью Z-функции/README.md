@@ -14,6 +14,8 @@ void substring_search(const char *text, const char *pattern)
 }
 ```
 
+где
+
 * `text` – строка, в которой ищем («стог сена»),
 
 * `pattern` – строка, которую ищем («иголка»).
