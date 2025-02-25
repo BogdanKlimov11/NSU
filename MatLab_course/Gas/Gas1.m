@@ -9,6 +9,7 @@ res_y = res(4);
 set(gcf, 'position', [res_x / 2 + 2, (res_y - res_y * 0.8) / 2, res_y * 0.8, res_y * 0.8]);
 
 global rad lx ly m n;
+
 n = 30;  % Количество шаров
 dt = 0.01;  % Шаг по времени
 tmot = 0;  % Текущее время
@@ -18,7 +19,7 @@ m(1:n) = 1;  % Массы шаров
 g1 = 0.001;  % Ускорение свободного падения
 v0 = 100;  % Начальные скорости и координаты из Set_random.m
 out = set_random(v0);  % Задаем случайные координаты частиц,
-x = out(1, :);  % Скорости всех направлены по х и равны аргументу
+x = out(1, :);
 y = out(2, :);
 vx = out(3, :);
 vy = out(4, :);
@@ -28,6 +29,7 @@ vxmin = min(vx);
 vymin = min(vy);
 vxmax = max(vx);
 vymax = max(vy);
+
 vmin = sqrt(vxmin^2 + vymin^2);
 vmax = sqrt(vxmax^2 + vymax^2);
 
