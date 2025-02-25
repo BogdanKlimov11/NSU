@@ -25,7 +25,7 @@
 `private` поля и `private` методы можно добавлять в класс `String`.
 
 ```c++
-//String.hpp
+//string.hpp
 class String {
 public:
     String();
