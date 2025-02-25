@@ -9,7 +9,7 @@
 Реализовать класс `TempFileStream` в соответствии с приведённым ниже интерфейсом.
 
 ```c++
-//TempFileStream.hpp
+//temp_file_stream.hpp
 
 #include <cstdint> // uint8_t
 #include <cstdio>
