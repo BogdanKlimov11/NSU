@@ -1,38 +1,44 @@
-clear; clear global;
-set(0,'units','pixels'); res = get(0,'screensize'); resX = res(3); resY = res(4);
-set(gcf,'position', [resX/2+2, (resY - resY*0.8)/2, resY*0.8, resY*0.8])
+clear;
 
-global rad lx ly m n;
-n = 300;                %количество шаров
-dt = .01;               %шаг по времени
-tmot = 0;               %текущее время
-lx = 200; ly = 200;     %размеры биллиарда
-rad(1:n) = 1;           %радиусы шаров
-m(1:n) = 1;             %массы шаров
-g1 = 0.001;             %ускорение свободного падениЯ
-v0 = 100;               %начальные скорости и координаты из set_random.m
-out = set_random(v0);	%задаем случайные координаты частиц, 
-x = out(1,:);           %скорости всех направлены по х и равны аргументу	
-y = out(2,:);
-vx = out(3,:);
-vy = out(4,:);
-vxmin = min(vx);        %вычисление минимального и максимального значения 
-vymin = min(vy);
-vxmax = max(vx);
-vymax = max(vy);
-vmin = sqrt(vxmin^2 + vymin^2);
-vmax = sqrt(vxmax^2 + vymax^2);
+set(0, 'units', 'pixels');
+res = get(0, 'screensize');
+res_x = res(3);
+res_y = res(4);
+set(gcf, 'position', [res_x / 2 + 2, (res_y - res_y * 0.8) / 2, res_y * 0.8, res_y * 0.8]);
 
+% РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ
+n = 300;  % РљРѕР»РёС‡РµСЃС‚РІРѕ С€Р°СЂРѕРІ
+dt = 0.01;  % РЁР°Рі РїРѕ РІСЂРµРјРµРЅРё
+tmot = 0;  % РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ
+lx = 200; ly = 200;  % Р Р°Р·РјРµСЂС‹ РѕР±Р»Р°СЃС‚Рё
+rad(1:n) = 1;  % Р Р°РґРёСѓСЃС‹ С€Р°СЂРѕРІ
+m(1:n) = 1;  % РњР°СЃСЃС‹ С€Р°СЂРѕРІ
+g1 = 0.001;  % РЈСЃРєРѕСЂРµРЅРёРµ СЃРІРѕР±РѕРґРЅРѕРіРѕ РїР°РґРµРЅРёСЏ
+v0 = 100;  % РќР°С‡Р°Р»СЊРЅС‹Рµ СЃРєРѕСЂРѕСЃС‚Рё Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ РёР· set_random.m
+out = set_random(v0);  % Р“РµРЅРµСЂР°С†РёСЏ СЃР»СѓС‡Р°Р№РЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚ С‡Р°СЃС‚РёС†
+x = out(1,:);  % РљРѕРѕСЂРґРёРЅР°С‚С‹ РїРѕ x
+y = out(2,:);  % РљРѕРѕСЂРґРёРЅР°С‚С‹ РїРѕ y
+vx = out(3,:);  % РЎРєРѕСЂРѕСЃС‚Рё РїРѕ x
+vy = out(4,:);  % РЎРєРѕСЂРѕСЃС‚Рё РїРѕ y
 
-h = animatedline(vx,vy); %рисуем шары
-set(h,'LineStyle','none','color','k','Marker','o','MarkerSize',5*rad(1));
+% Р’С‹С‡РёСЃР»РµРЅРёРµ РјРёРЅРёРјР°Р»СЊРЅС‹С… Рё РјР°РєСЃРёРјР°Р»СЊРЅС‹С… Р·РЅР°С‡РµРЅРёР№
+vx_min = min(vx); 
+vy_min = min(vy);
+vx_max = max(vx);
+vy_max = max(vy);
+v_min = sqrt(vx_min^2 + vy_min^2);
+v_max = sqrt(vx_max^2 + vy_max^2);
+
+% РќР°СЃС‚СЂРѕР№РєР° РіСЂР°С„РёРєР°
+h = animatedline('Color', 'k', 'LineStyle', 'none', 'Marker', 'o', 'MarkerSize', 5 * rad(1));
 axis([-lx, lx, -ly, ly]);
-axis('square'); grid on;
+axis('square');
+grid on;
 
+% РћСЃРЅРѕРІРЅРѕР№ С†РёРєР»
 while ishghandle(h)
-    [x, y, vx, vy] = BallsF8(n,x,y,vx,vy,dt);
-    clearpoints(h);
-    addpoints(h,vx,vy);
-    pause(0.000001);               
+    [x, y, vx, vy] = BallsF8(n, x, y, vx, vy, dt);  % РћР±РЅРѕРІР»РµРЅРёРµ РїРѕР·РёС†РёР№ Рё СЃРєРѕСЂРѕСЃС‚РµР№
+    clearpoints(h);  % РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… С‚РѕС‡РµРє
+    addpoints(h, x, y);  % Р”РѕР±Р°РІР»РµРЅРёРµ РЅРѕРІС‹С… С‚РѕС‡РµРє
+    pause(0.000001);  % Р—Р°РјРµРґР»РµРЅРёРµ Р°РЅРёРјР°С†РёРё
 end;
- 
