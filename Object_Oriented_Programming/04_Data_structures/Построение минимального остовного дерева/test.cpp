@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+
 #include "disjoint_set.hpp"
 #include "graph.hpp"
 #include "kruskal.hpp"
