@@ -1,10 +1,11 @@
+#include "gtest/gtest.h"
+
 #include <list>
 #include <deque>
 #include <string>
 #include <array>
 #include <forward_list>
 
-#include "gtest/gtest.h"
 #include "quick_sort.hpp"
 #include "point.hpp"
 #include "fill_random.hpp"
