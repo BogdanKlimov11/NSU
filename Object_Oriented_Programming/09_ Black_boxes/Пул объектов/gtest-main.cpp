@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
-#include "gtest-memleak.h"
 
 #include <cstdio>
+
+#include "gtest-memleak.hpp"
 
 GTEST_API_ int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);
