@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+
 #include "friend_recommendation.hpp"
 #include "parser.hpp"
 #include "writer.hpp"
