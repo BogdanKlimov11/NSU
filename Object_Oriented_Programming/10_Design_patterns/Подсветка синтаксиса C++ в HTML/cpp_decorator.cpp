@@ -1,4 +1,4 @@
-#include "cpp_decorator.h"
+#include "cpp_decorator.hpp"
 
 std::string CPPDecorator::write(const std::string& str) {
     return Decorate(Colorize(str, key_words));
