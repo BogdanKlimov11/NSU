@@ -91,7 +91,7 @@
     <pre>
       # include &lt;iostream&gt;
       void <font color=#0000FF>main</font>() {
-         int <font color=#00FF00>flag</font> = 10;
+         int <font color=#00FF00>flag</font> = 1;
          std::cout &lt;&lt; <font color=#00FF00>flag</font>;
       }
     </pre>
