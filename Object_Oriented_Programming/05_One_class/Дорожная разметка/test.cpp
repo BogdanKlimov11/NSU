@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+
 #include "road_marker.hpp"
 #include "writer.hpp"
 
