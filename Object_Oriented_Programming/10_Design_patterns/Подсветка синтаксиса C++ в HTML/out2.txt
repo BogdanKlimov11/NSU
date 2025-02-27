@@ -1,0 +1,20 @@
+<html>
+<body>
+<pre>#include &#60;iostream&#62;
+
+<font color=0000ff>int</font> main()
+{
+&#8195;std::cout &#60;&#60; &#34;Hello, world&#34; &#60;&#60; std::endl;
+&#8195;<font color=0000ff>return</font> 0;
+}
+{
+}
+{
+}
+{
+}
+{
+}
+</pre>
+</body>
+</html>
