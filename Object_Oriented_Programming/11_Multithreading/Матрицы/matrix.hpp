@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cassert>
+#include <cstdio>
 #include <iostream>
+#include <cassert>
 
 class Matrix final {
     size_t col = 0;
@@ -10,10 +11,9 @@ class Matrix final {
 
     Matrix& change_lines(size_t line1, size_t line2, int sign = 1) {
         assert(sign == 1 || sign == -1);
-        if (line1 >= rows() || line2 >= rows()) {
+        if (line1 >= rows() || line2 >= rows())
             throw std::out_of_range("out of range");
-        }
-        for (size_t k = 0; k < cols(); ++k) {
+        for (size_t k = 0; k < cols(); k++) {
             double temp = coeffRef(line1, k) * sign;
             coeffRef(line1, k) = coeffRef(line2, k);
             coeffRef(line2, k) = temp;
@@ -24,7 +24,7 @@ class Matrix final {
     Matrix& clean() {
         row = 0;
         col = 0;
-        delete[] matrix;
+        delete matrix;
         matrix = nullptr;
         return *this;
     }
