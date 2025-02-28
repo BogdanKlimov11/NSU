@@ -9,7 +9,7 @@ int main() {
 
     try {
         std::cout << test_list.at('A') << " " << std::endl;
-        
+
         auto it = test_list.begin();
         test_list.erase(it++);
     }
