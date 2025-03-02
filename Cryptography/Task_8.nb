@@ -1,0 +1,6 @@
+(* Функция для сжатия с использованием алгоритма Шенона-Фано *)
+ShannonFanoCompress[data_] := ShannonFano[data];
+
+(* Пример использования *)
+data = {"a", "b", "a", "c", "a", "b", "a"};
+compressedData = ShannonFanoCompress[data]
