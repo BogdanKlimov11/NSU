@@ -1,10 +1,4 @@
-#include <string>
-#include <sstream>
-#include <utility>
-
 #include "real_spending_parser.hpp"
-#include "spending.hpp"
-#include "date.hpp"
 
 std::pair<Spending, bool> RealSpendingParser::getNextItem() {
     std::string line, str_path;
