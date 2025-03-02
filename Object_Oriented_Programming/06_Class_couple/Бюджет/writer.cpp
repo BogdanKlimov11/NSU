@@ -1,6 +1,3 @@
-#include <vector>
-#include <ostream>
-
 #include "writer.hpp"
 
 void Writer::writeSpendings(const std::vector<itemInfo>& spendings) {
