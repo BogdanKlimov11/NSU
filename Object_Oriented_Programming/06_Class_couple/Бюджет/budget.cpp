@@ -1,7 +1,3 @@
-#include <vector>
-#include <utility>
-#include <algorithm>
-
 #include "budget.hpp"
 
 void Budget::addExpectedSpendings(Categories& categories) {
