@@ -1,0 +1,3 @@
+Auto               6000
+Food+Products 10000
+Alcohol:beer      900
