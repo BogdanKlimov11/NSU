@@ -1,12 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-cut -f 1,6 -d: /etc/passwd | tr ":" " " | while read -r f1 f6 
-do
-	if [ "$f6" != "/nonexistent" ] ; then
-		log=$(sed '1!d' <( last $f1 ))
-                	if [ ! -z "$log" ] ; then
-                        	echo $f1
-                	fi
-	fi
-done
-
+# Перебираем всех пользователей из /etc/passwd
+while IFS=: read -r login _ home _; do
+  # Проверяем, существует ли домашний каталог
+  if [ -d "$home" ]; then
+    # Проверяем, заходил ли пользователь в систему (с помощью команды last)
+    if last "$login" | grep -q "$login"; then
+      echo "$login"
+    fi
+  fi
+done < /etc/passwd
