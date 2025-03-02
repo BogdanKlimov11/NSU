@@ -1,8 +1,3 @@
-#include <string>
-#include <vector>
-#include <sstream>
-#include <utility>
-
 #include "expected_spending_parser.hpp"
 
 std::pair<Categories, bool> ExpectedSpendingParser::getNextItem() {
