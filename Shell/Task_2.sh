@@ -1,12 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-cat /etc/passwd | cut -d ":" -f 1 | while read user
-do
-	proc=$(sed '2!d' <( ps -u $user ))
-	if [ ! -z "$proc" ] ; then
-		log=$(sed '1!d' <( last $user ))
-		if [ -z "$log" ] ; then
-			echo $user
-		fi
-	fi
-done
+# Перебираем всех пользователей из /etc/passwd
+while IFS=: read -r login _ _ _; do
+  # Проверяем, есть ли процессы, запущенные этим пользователем
+  if pgrep -u "$login" > /dev/null; then
+    # Проверяем, не заходил ли пользователь в систему
+    if ! last "$login" | grep -q "$login"; then
+      echo "$login"
+    fi
+  fi
+done < /etc/passwd
