@@ -2,7 +2,9 @@
 
 Реализовать быструю сортировку (quick sort) с задаваемым компаратором.
 
-<a href="http://www.cplusplus.com/reference/algorithm/sort/">Интерфейс функции</a>:
+Интерфейс функции:
+
+<a href="http://www.cplusplus.com/reference/algorithm/sort/">Интерфейс идентичен</a>
 
 ```cpp
 template <class RandomAccessIterator, class Compare>
