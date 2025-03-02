@@ -4,7 +4,7 @@
 #include <bitset>
 #include <string>
 
-#include "bloom_filter.h"
+#include "bloom_filter.hpp"
 extern "C" {
 #include "refactoring.h"
 }
