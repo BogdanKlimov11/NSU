@@ -15,6 +15,43 @@ DDDDDDD хранят семь десятичных цифр числа, посл
 
 ### Функции и структуры данных
 
+```python
+class Bcd:
+    INVALID_BCD = 0xFFFFFFFF
+
+    @staticmethod
+    def bcd_add(n1: int, n2: int) -> int:
+        pass
+
+    @staticmethod
+    def bcd_sub(n1: int, n2: int) -> int:
+        pass
+
+    @staticmethod
+    def bcd_mul(n1: int, n2: int) -> int:
+        pass
+
+    @staticmethod
+    def bcd_div(n1: int, n2: int) -> tuple[int, int]:
+        pass
+
+    @staticmethod
+    def bcd_compare(n1: int, n2: int) -> int:
+        pass
+
+    @staticmethod
+    def bcd_from_int(n: int) -> int:
+        pass
+
+    @staticmethod
+    def bcd_to_int(n: int) -> int:
+        pass
+
+    @staticmethod
+    def bcd_to_str(n: int) -> str:
+        pass
+```
+
 ```c
 typedef unsigned int Bcd;
 
