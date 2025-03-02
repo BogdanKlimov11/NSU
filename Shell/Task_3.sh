@@ -1,21 +1,17 @@
 #!/bin/bash
 
-if  [[ $# =~ 3 ]] ; then
-   echo "error: args aren't valid" >&2;
-   exit 1;
-fi
-re='^[0-9]+$'
-if ! [[ $1 =~ $re ]] ; then
-   echo "error: Invalid args" >&2;
-   exit 1;
-fi
-if ! [[ $2 =~ $re ]] ; then
-   echo "error: Invalid args" >&2;
-   exit 1;
+# Проверяем количество аргументов и их тип
+if [ "$#" -ne 2 ]; then
+  echo "Ошибка: должно быть два аргумента."
+  exit 1
 fi
 
-add=$(($1 + $2)) 
+# Проверяем, являются ли оба аргумента числами
+if ! [[ "$1" =~ ^-?[0-9]+$ ]] || ! [[ "$2" =~ ^-?[0-9]+$ ]]; then
+  echo "Ошибка: оба аргумента должны быть числами."
+  exit 1
+fi
 
-echo $add
-
-
+# Выводим сумму
+sum=$(( $1 + $2 ))
+echo "Сумма: $sum"
