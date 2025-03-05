@@ -66,7 +66,7 @@ void SceneWidget::initializeGL() { // Инициализация OpenGL
     m_shader_program = new QOpenGLShaderProgram(this); // Создание объекта шейдерной программы
     m_shader_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":vertex_shader.vsh"); // Добавление вершинного шейдера
     m_shader_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":fragment_shader.fsh"); // Добавление фрагментного шейдера
-    m_shader_program->link();       // Связывание шейдеров в программу
+    m_shader_program->link(); // Связывание шейдеров в программу
     m_pos_attr = m_shader_program->attributeLocation("pos_attr"); // Получение позиции атрибута вершин
     m_col_attr = m_shader_program->attributeLocation("col_attr"); // Получение позиции атрибута цвета
     m_matrix_uniform = m_shader_program->uniformLocation("mvp_matrix"); // Получение позиции униформ-переменной матрицы
@@ -74,7 +74,7 @@ void SceneWidget::initializeGL() { // Инициализация OpenGL
 }
 
 void SceneWidget::resizeGL(int w, int h) { // Обработка изменения размеров окна
-    glViewport(0, 0, w, h);  // Установка области просмотра под новые размеры окна
+    glViewport(0, 0, w, h); // Установка области просмотра под новые размеры окна
 }
 
 void SceneWidget::paintGL() { // Отрисовка сцены
