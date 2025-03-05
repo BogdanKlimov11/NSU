@@ -88,7 +88,7 @@ void TriangleWindow::initialize() {
     m_program = new QOpenGLShaderProgram(this);
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
-    m_program->link();
+    Q_ASSERT(m_program->link());
 
     // Привязка атрибутов шейдера
     m_posAttr = m_program->attributeLocation("posAttr");
