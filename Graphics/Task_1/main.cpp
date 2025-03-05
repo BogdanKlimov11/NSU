@@ -116,15 +116,23 @@ void TriangleWindow::render() {
     m_program->setUniformValue(m_matrixUniform, matrix);
 
     static const GLfloat vertices[] = {
-        0.5f, 0.5f, 0.5f,   0.5f, -0.5f, 0.5f,  -0.5f, -0.5f, 0.5f,
-        -0.5f, 0.5f, 0.5f,  0.5f, 0.5f, -0.5f,  0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f
+        0.5f, 0.5f, 0.5f,
+        0.5f, -0.5f, 0.5f,
+        -0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, 0.5f, -0.5f
     };
 
     static const GLuint indices[] = {
-        0, 3, 1, 1, 3, 2,  6, 7, 5, 4, 5, 7,
-        0, 4, 7, 0, 7, 3,  1, 2, 6, 1, 6, 5,
-        0, 1, 4, 1, 5, 4,  2, 3, 7, 2, 7, 6
+        0, 3, 1, 1, 3, 2,
+        6, 7, 5, 4, 5, 7,
+        0, 4, 7, 0, 7, 3,
+        1, 2, 6, 1, 6, 5,
+        0, 1, 4, 1, 5, 4,
+        2, 3, 7, 2, 7, 6
     };
 
     GLuint EBO;
@@ -133,9 +141,14 @@ void TriangleWindow::render() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     static const GLfloat colors[] = {
-        1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 1.0f,  0.0f, 0.0f, 1.0f
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f
     };
 
     glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices);
