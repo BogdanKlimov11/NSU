@@ -100,4 +100,17 @@ namespace {
 }
 
 Pixel RGBPixelMedianFilter::filter(Neighbourhood& notFiltered, size_t filtrationThreshold) {
-    auto central
+    auto centralPixelIdx = vectorIndex(notFiltered.getNeighbouringPixels(), notFiltered.getCentralPixel());
+    auto redFiltered = redFilter(notFiltered.getNeighbouringPixels(), filtrationThreshold, notFiltered.getCentralPixel());
+    auto greenFiltered = greenFilter(notFiltered.getNeighbouringPixels(), filtrationThreshold, notFiltered.getCentralPixel());
+    auto blueFiltered = blueFilter(notFiltered.getNeighbouringPixels(), filtrationThreshold, notFiltered.getCentralPixel());
+
+    return Pixel(redFiltered[centralPixelIdx].r, greenFiltered[centralPixelIdx].g, blueFiltered[centralPixelIdx].b);
+}
+
+Pixel BlackWhitePixelMedianFilter::filter(Neighbourhood& notFiltered, size_t filtrationThreshold) {
+    auto centralPixelIdx = vectorIndex(notFiltered.getNeighbouringPixels(), notFiltered.getCentralPixel());
+    auto redFiltered = redFilter(notFiltered.getNeighbouringPixels(), filtrationThreshold, notFiltered.getCentralPixel());
+
+    return Pixel(redFiltered[centralPixelIdx].r, redFiltered[centralPixelIdx].r, redFiltered[centralPixelIdx].r);
+}
