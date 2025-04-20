@@ -223,7 +223,7 @@ void SquareWindow::setLightType(int type) {
         light_y_param = lightDirection.y();
         light_z_param = lightDirection.z();
         lightColor = QVector3D(1.0f, 1.0f, 0.8f);
-    } else if (lightType == 1) { // Point
+    } else if (lightType == 1) {
         lightCutoff = 0.0f;
         lightDirection = QVector3D(0.0f, 0.0f, 0.0f);
         light_x_param = 1.0f;
