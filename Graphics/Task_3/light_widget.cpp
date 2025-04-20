@@ -65,23 +65,23 @@ LightWidget::LightWidget(SquareWindow *renderWindow, QWidget *parent)
     cutoffSlider = slider(70, 100, 1); // Ползунок для угла обрезки света (диапазон: 70..100, шаг: 1)
 
     // Создание кнопки для изменения цвета куба
-    QPushButton *change_color_cube_button = new QPushButton(tr("&Цвет куба"));
+    QPushButton *change_color_cube_button = new QPushButton(tr("Цвет куба"));
     // Отключение фокуса для кнопки (чтобы она не перехватывала фокус при клике)
     change_color_cube_button->setFocusPolicy(Qt::NoFocus);
 
     // Создание кнопки для изменения цвета источника света
-    QPushButton *change_color_light_button = new QPushButton(tr("&Цвет света"));
+    QPushButton *change_color_light_button = new QPushButton(tr("Цвет света"));
     // Отключение фокуса для кнопки
     change_color_light_button->setFocusPolicy(Qt::NoFocus);
 
     // Создание кнопок для выбора свойств материала
-    materialAmbientButton = new QPushButton(tr("&Ambient материал")); // Кнопка для фонового освещения материала
+    materialAmbientButton = new QPushButton(tr("Ambient материал")); // Кнопка для фонового освещения материала
     materialAmbientButton->setFocusPolicy(Qt::NoFocus); // Отключение фокуса
-    materialDiffuseButton = new QPushButton(tr("&Diffuse материал")); // Кнопка для диффузного освещения материала
+    materialDiffuseButton = new QPushButton(tr("Diffuse материал")); // Кнопка для диффузного освещения материала
     materialDiffuseButton->setFocusPolicy(Qt::NoFocus); // Отключение фокуса
-    materialSpecularButton = new QPushButton(tr("&Specular материал")); // Кнопка для зеркального освещения материала
+    materialSpecularButton = new QPushButton(tr("Specular материал")); // Кнопка для зеркального освещения материала
     materialSpecularButton->setFocusPolicy(Qt::NoFocus); // Отключение фокуса
-    globalAmbientButton = new QPushButton(tr("&Фоновое освещение")); // Кнопка для глобального фонового освещения
+    globalAmbientButton = new QPushButton(tr("Фоновое освещение")); // Кнопка для глобального фонового освещения
     globalAmbientButton->setFocusPolicy(Qt::NoFocus); // Отключение фокуса
 
     // Размещение виджетов в сетке QGridLayout
