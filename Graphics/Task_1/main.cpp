@@ -6,7 +6,6 @@
 #include <QtMath>
 #include <QKeyEvent>
 
-// Подключение заголовочного файла базового класса OpenGLWindow
 #include "square_widget.h"
 
 // Определение класса TriangleWindow, который наследуется от OpenGLWindow
