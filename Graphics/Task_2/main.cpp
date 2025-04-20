@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     auto scene_widget = new SceneWidget(scene_window); // Создание виджета OpenGL сцены
     auto scene_layout = new QVBoxLayout(scene_window); // Создание вертикальной компоновки для окна
     scene_layout->addWidget(scene_widget); // Добавление виджета сцены в компоновку
-    scene_window->setWindowTitle("Display"); // Установка заголовка окна
+    scene_window->setWindowTitle("Дисплей"); // Установка заголовка окна
     scene_widget->setMinimumSize(640, 640); // Установка минимального размера виджета сцены
     scene_window->resize(640, 640); // Установка начального размера окна
 
@@ -132,11 +132,11 @@ int main(int argc, char *argv[]) {
     });
 
     // Метки для элементов управления
-    auto rotation_x_label = new QLabel("Rotation X:", control_window); // Метка для вращения по X
-    auto rotation_y_label = new QLabel("Rotation Y:", control_window); // Метка для вращения по Y
-    auto rotation_z_label = new QLabel("Rotation Z:", control_window); // Метка для вращения по Z
-    auto morphing_label = new QLabel("Morphing:", control_window); // Метка для морфинга
-    auto split_label = new QLabel("Split Parameter:", control_window); // Метка для параметра разделения
+    auto rotation_x_label = new QLabel("Ось X:", control_window); // Метка для вращения по X
+    auto rotation_y_label = new QLabel("Ось Y:", control_window); // Метка для вращения по Y
+    auto rotation_z_label = new QLabel("Ось Z:", control_window); // Метка для вращения по Z
+    auto morphing_label = new QLabel("Морфинг:", control_window); // Метка для морфинга
+    auto split_label = new QLabel("Параметр разделения:", control_window); // Метка для параметра разделения
 
     // Компоновка для окна управления
     auto control_layout = new QVBoxLayout(control_window); // Создание вертикальной компоновки
@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
     control_layout->addWidget(split_parameter_edit); // Добавление поля ввода разделения
     control_layout->addStretch(); // Добавление растяжения для компактного размещения
 
-    control_window->setWindowTitle("Control Panel"); // Установка заголовка окна управления
+    control_window->setWindowTitle("Панель управления"); // Установка заголовка окна управления
     control_window->resize(300, 420); // Установка начального размера окна управления
 
     // Показываем оба окна
