@@ -38,7 +38,7 @@ public:
     void render(QOpenGLShaderProgram& program);
     bool isValid() const { return objectValid; }
     QVector3D getMaterialColor() const { return materials.empty() ? QVector3D(1.0f, 1.0f, 1.0f) : materials[0].diffuseColor; }
-    void setMaterialColor(const QVector3D& color); // Объявление метода
+    void setMaterialColor(const QVector3D& color);
 
 private:
     bool loadMaterial(const QString& materialPath);
