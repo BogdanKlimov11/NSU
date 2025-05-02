@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>earth_map.png</file>
-        <file>normal_map.png</file>
-    </qresource>
-</RCC>
