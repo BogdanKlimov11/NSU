@@ -51,6 +51,13 @@ private:
         size_t materialIndex;
         QOpenGLBuffer vbo;
         QOpenGLBuffer ibo;
+
+        MeshPart(std::vector<Vertex> v, std::vector<GLint> i, size_t matIdx)
+            : vertices(std::move(v)),
+            indices(std::move(i)),
+            materialIndex(matIdx),
+            vbo(QOpenGLBuffer::VertexBuffer),
+            ibo(QOpenGLBuffer::IndexBuffer) {}
     };
 
     QString objectName;
