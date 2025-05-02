@@ -18,5 +18,3 @@ RESOURCES += \
     objects.qrc \
     shaders.qrc \
     textures.qrc
-
-DISTFILES +=
