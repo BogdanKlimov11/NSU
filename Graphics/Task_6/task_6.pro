@@ -16,5 +16,3 @@ HEADERS += \
 RESOURCES += \
     shaders.qrc \
     textures.qrc
-
-DISTFILES +=
