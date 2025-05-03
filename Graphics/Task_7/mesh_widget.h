@@ -69,7 +69,7 @@ private:
     QPoint lastMousePos;
     float rotationX = 0.0f;
     float rotationY = 0.0f;
-    QVector3D objectColor = QVector3D(1.0f, 1.0f, 1.0f); // Добавлено для хранения текущего цвета
+    QVector3D objectColor = QVector3D(1.0f, 1.0f, 1.0f);
 
 public slots:
     void moveCamera(int position);
@@ -81,7 +81,7 @@ public slots:
     void setDirectedLightY(double y);
     void setDirectedLightZ(double z);
     void setCurrentObject(int index);
-    void setColorRed(int value);   // Добавлено объявление
-    void setColorGreen(int value); // Добавлено объявление
-    void setColorBlue(int value);  // Добавлено объявление
+    void setColorRed(int value);
+    void setColorGreen(int value);
+    void setColorBlue(int value);
 };
