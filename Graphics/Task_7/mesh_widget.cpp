@@ -1,6 +1,7 @@
 #include <QMouseEvent>
 
 #include "mesh_widget.h"
+#include "object_loader.h"
 
 MeshWidget::MeshWidget(QWidget* parent) : QOpenGLWidget(parent) {
 }
