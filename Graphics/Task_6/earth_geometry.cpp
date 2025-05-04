@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include "earth_geometry.h"
+#include "earth_material.h"
 
 EarthGeometry::EarthGeometry(QWidget *parent) : QOpenGLWidget(parent) {}
 
