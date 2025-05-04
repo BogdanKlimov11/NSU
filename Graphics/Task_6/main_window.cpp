@@ -1,4 +1,5 @@
 #include "main_window.h"
+#include "earth_geometry.h"
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     squareWindow = new EarthGeometry(this);
