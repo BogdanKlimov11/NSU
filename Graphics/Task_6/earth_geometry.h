@@ -10,8 +10,6 @@
 #include <QVector3D>
 #include <memory>
 
-#include "earth_material.h"
-
 struct VertexData {
     VertexData(QVector3D p, QVector3D n, QVector2D t, QVector3D tng, QVector3D btg)
         : position(p), normal(n), textcoord(t), tangent(tng), bitangent(btg) {}
