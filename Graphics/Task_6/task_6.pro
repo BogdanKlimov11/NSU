@@ -3,9 +3,9 @@ QT += core gui opengl openglwidgets
 CONFIG += c++17
 
 SOURCES += \
+    main.cpp \
     earth_geometry.cpp \
     earth_material.cpp \
-    main.cpp \
     main_window.cpp
 
 HEADERS += \
