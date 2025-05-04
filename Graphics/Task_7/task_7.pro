@@ -4,14 +4,14 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    light_window.cpp \
     mesh_widget.cpp \
-    object_loader.cpp
+    object_loader.cpp \
+    light_window.cpp
 
 HEADERS += \
     mesh_widget.h \
-    light_window.h \
-    object_loader.h
+    object_loader.h \
+    light_window.h
 
 RESOURCES += \
     icons.qrc \
