@@ -2,6 +2,7 @@
 #include <QLabel>
 
 #include "light_window.h"
+#include "mesh_widget.h"
 
 LightsController::LightsController(MeshWidget* meshWidget, QWidget* parent)
     : QDialog(parent), meshWidget(meshWidget) {
