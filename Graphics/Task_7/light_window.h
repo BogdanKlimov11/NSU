@@ -4,8 +4,6 @@
 #include <QCheckBox>
 #include <QDoubleSpinBox>
 
-#include "mesh_widget.h"
-
 class LightsController : public QDialog {
     Q_OBJECT
 public:
