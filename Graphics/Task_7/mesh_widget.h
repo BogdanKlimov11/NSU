@@ -8,8 +8,6 @@
 #include <QPoint>
 #include <vector>
 
-#include "object_loader.h"
-
 class Camera {
 public:
     Camera() {
