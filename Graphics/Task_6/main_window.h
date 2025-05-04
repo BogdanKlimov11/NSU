@@ -7,8 +7,6 @@
 #include <QHBoxLayout>
 #include <QCheckBox>
 
-#include "earth_geometry.h"
-
 class MainWindow : public QWidget {
     Q_OBJECT
 
