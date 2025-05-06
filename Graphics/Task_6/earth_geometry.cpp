@@ -116,7 +116,8 @@ void EarthGeometry::resizeGL(int w, int h) {
 void EarthGeometry::timerEvent(QTimerEvent *e) {
     if (e->timerId() == timer.timerId()) {
         update();
-    } else if (e->timerId() == lightTimer.timerId()) {
+    }
+    else if (e->timerId() == lightTimer.timerId()) {
         updateLightPosition();
     }
 }
