@@ -124,7 +124,8 @@ public:
             QVector3D color = colorCombo->itemData(index).value<QVector3D>();
             if (color == QVector3D(-1, -1, -1)) {
                 glWidget->setMulticolorMode(true);
-            } else {
+            }
+            else {
                 glWidget->setMulticolorMode(false);
                 glWidget->setCubeColor(color);
             }
