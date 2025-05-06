@@ -14,3 +14,6 @@ HEADERS += \
 RESOURCES += \
     shaders.qrc \
     textures.qrc
+
+LIBS += \
+    -lopengl32
