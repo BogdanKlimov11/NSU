@@ -4,8 +4,7 @@
 
 EarthMaterial::EarthMaterial() {
     QImage dayImage(":/day_map.png");
-    if (dayImage.isNull()) {
-    } else {
+    if (!dayImage.isNull()) {
         dayTexture = std::make_shared<QOpenGLTexture>(dayImage);
         dayTexture->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
         dayTexture->setMagnificationFilter(QOpenGLTexture::Linear);
@@ -14,8 +13,7 @@ EarthMaterial::EarthMaterial() {
     }
 
     QImage nightImage(":/night_map.png");
-    if (nightImage.isNull()) {
-    } else {
+    if (!nightImage.isNull()) {
         nightTexture = std::make_shared<QOpenGLTexture>(nightImage);
         nightTexture->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
         nightTexture->setMagnificationFilter(QOpenGLTexture::Linear);
@@ -24,8 +22,7 @@ EarthMaterial::EarthMaterial() {
     }
 
     QImage normalMapImage(":/normal_map.png");
-    if (normalMapImage.isNull()) {
-    } else {
+    if (!normalMapImage.isNull()) {
         normalMap = std::make_shared<QOpenGLTexture>(normalMapImage);
         normalMap->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
         normalMap->setMagnificationFilter(QOpenGLTexture::Linear);
