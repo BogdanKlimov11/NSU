@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>close.ico</file>
-        <file>cube.ico</file>
-        <file>settings.ico</file>
-    </qresource>
-</RCC>
