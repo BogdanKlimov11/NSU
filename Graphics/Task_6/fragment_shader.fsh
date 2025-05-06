@@ -34,7 +34,8 @@ void main() {
     if (useTexture == 1) {
         if (useNightTexture == 1) {
             diffuseColor = texture2D(night_texture, texCoord).rgb * 3.0;
-        } else {
+        }
+        else {
             diffuseColor = texture2D(day_texture, texCoord).rgb;
         }
     }
