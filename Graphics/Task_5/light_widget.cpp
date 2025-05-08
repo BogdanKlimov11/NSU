@@ -223,7 +223,7 @@ LightWidget::LightWidget(MainWindow *mainWindow, QWidget *parent) : QWidget(pare
 
     auto *shaderGroup = new QGroupBox("Shader selection");
     auto *shaderLayout = new QHBoxLayout;
-    toggleLightingButton = new QPushButton(tr("Toggle lighting (Vertex)"));
+    toggleLightingButton = new QPushButton(tr("Toggle lighting (Gouraud shading)"));
     toggleLightingButton->setFocusPolicy(Qt::NoFocus);
     shaderLayout->addWidget(toggleLightingButton);
     shaderLayout->setAlignment(Qt::AlignCenter);
@@ -268,7 +268,7 @@ LightWidget::LightWidget(MainWindow *mainWindow, QWidget *parent) : QWidget(pare
     connect(toggleLightingButton, &QPushButton::clicked, this, [this, mainWindow]() {
         bool useFragment = !mainWindow->isFragmentLighting();
         mainWindow->setLightingMode(useFragment);
-        toggleLightingButton->setText(useFragment ? tr("Toggle lighting (Fragment)") : tr("Toggle lighting (Vertex)"));
+        toggleLightingButton->setText(useFragment ? tr("Toggle lighting (Phong shading)") : tr("Toggle lighting (Gouraud shading)"));
     });
     connect(mainWindow, &MainWindow::fpsUpdated, this, [this](int fps) {
         fpsLabel->setText(QString("FPS: %1").arg(fps));
