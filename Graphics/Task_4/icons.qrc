@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>display.ico</file>
-        <file>control.ico</file>
-    </qresource>
-</RCC>
