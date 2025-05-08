@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>gouraud_fragment.fsh</file>
+        <file>gouraud_vertex.vsh</file>
+        <file>phong_fragment.fsh</file>
+        <file>phong_vertex.vsh</file>
+    </qresource>
+</RCC>
