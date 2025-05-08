@@ -1,66 +1,54 @@
-#include <utility.h>
-#include <ansi_c.h>
+#include <stdio.h>
+#include <math.h>
 
-float A, B, C, pD, pValue1, pValue2, sammit;
-
-void CalculateRoots(float A, float B, float C, float *pD,  float *pValue1, float *pValue2)
-{
-    *pD=B*B-4*A*C;
-    if (*pD<0)
-    {
-        *pValue1= -B/2*A;
-        *pValue2= sqrt(-*pD)/2*A;
-    }
-    else
-    {
-        *pValue1=(-B-sqrt(*pD))/2*A;
-        *pValue2=(-B+sqrt(*pD))/2*A;
+void CalculateRoots(float A, float B, float C, float *pD, float *pValue1, float *pValue2) {
+    *pD = B * B - 4 * A * C;
+    if (*pD < 0) {
+        *pValue1 = -B / (2 * A);
+        *pValue2 = sqrt(-*pD) / (2 * A);
+    } else {
+        *pValue1 = (-B - sqrt(*pD)) / (2 * A);
+        *pValue2 = (-B + sqrt(*pD)) / (2 * A);
     }
 }
-void Parabola(float A, float B,  float *sammit)
-{
-    *sammit=-B/2*A;
+
+void Parabola(float A, float B, float *sammit) {
+    *sammit = -B / (2 * A);
 }
 
-static void usage (char *name)
-{
-    fprintf (stderr, "usage: %s <argument>\n", name);
-    fprintf (stderr, "A short summary of the functionality.\n");
-    fprintf (stderr, "    <argument>    is an argument\n");
-    exit (1);
-}
+int main(int argc, char *argv[]) {
+    float A, B, C, D, x1, x2, vertex;
+    char input[256];
 
-int main (int argc, char *argv[])
-{
+    while (1) {
+        printf("Enter coefficients A, B, C (or 'q' to quit): ");
+        if (fgets(input, sizeof(input), stdin) == NULL) break;
+        if (input[0] == 'q' && input[1] == '\n') break;
 
-//	  double test=-1./0.;
-//	  printf("%lf\n", test);
-
-    int exit=0;
-
-    while (1)
-    {
-        printf("Enter the coefficients A, B, C of the quadric equation:");
-        exit=getchar();
-        if (exit=='q') {break;}
-        scanf("%f %f %f", &A, &B, &C);
-        if (A==0)
-        {
-            if (B==0) {printf("This is not an equation");}
-            else {printf("This is linear function: x=%f", -C/B); }
+        if (sscanf(input, "%f %f %f", &A, &B, &C) != 3) {
+            printf("Invalid input. Please enter three numbers.\n\n");
+            continue;
         }
-        else
-        {
-            CalculateRoots(A, B, C, &pD, &pValue1, &pValue2);
-            if (pD<0)
-            {printf("x1=%f+i%f \nx2=%f-i%f ", pValue1, pValue2, pValue1, pValue2);}
-            else
-            {
-                printf("x1=%f, x2=%f", pValue1, pValue2);
-                Parabola(A, B, &sammit);
-                printf("\nThe vertex of a parabola: %f", sammit);
+
+        if (A == 0) {
+            if (B == 0) {
+                printf("Not an equation.\n");
+            } else {
+                printf("Linear equation: x = %g\n", -C / B);
             }
+        } else {
+            CalculateRoots(A, B, C, &D, &x1, &x2);
+            if (D < 0) {
+                printf("Complex roots: x1 = %g + i%g, x2 = %g - i%g\n", x1, x2, x1, x2);
+            } else if (D == 0) {
+                printf("Single root: x = %g\n", x1);
+            } else {
+                printf("Roots: x1 = %g, x2 = %g\n", x1, x2);
+            }
+            Parabola(A, B, &vertex);
+            printf("Vertex of parabola: x = %g\n", vertex);
         }
-        printf("\n\n");
+        printf("\n");
     }
+    return 0;
 }
