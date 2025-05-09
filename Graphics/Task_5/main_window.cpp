@@ -134,7 +134,8 @@ void MainWindow::changeLightX(float value) {
     float maxX = (cubeCountX - 1) * 2.5f / 2.0f;
     if (lightType == 0) {
         lightDirection.setX(value * maxX / 100.0f);
-    } else {
+    }
+    else {
         lightX = value * maxX / 100.0f;
         lightDirection.setX(-lightX);
         if (lightDirection.length() < 0.001f) {
