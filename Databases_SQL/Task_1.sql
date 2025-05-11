@@ -1,147 +1,169 @@
 -- Удаление таблиц, если они существуют
-DROP TABLE IF EXISTS Tasks;
-DROP TABLE IF EXISTS Projects;
-DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS tasks, projects, users CASCADE;
 
--- Создание таблицы Users
-CREATE TABLE Users (
+-- Создание таблицы users
+CREATE TABLE users (
     name        VARCHAR(32) NOT NULL,
     login       VARCHAR(32) NOT NULL,
     email       VARCHAR(32),
     department  VARCHAR(16) CHECK (department IN ('Production', 'Support', 'Accounting', 'Administration')),
-    PRIMARY KEY (login)
+    CONSTRAINT users_pk PRIMARY KEY (login)
 );
 
--- Создание таблицы Projects
-CREATE TABLE Projects (
+-- Создание таблицы projects
+CREATE TABLE projects (
     name        VARCHAR(32) NOT NULL,
     description TEXT,
     date_on     DATE NOT NULL,
     date_off    DATE,
-    PRIMARY KEY (name)
+    CONSTRAINT projects_pk PRIMARY KEY (name)
 );
 
--- Создание таблицы Tasks
-CREATE TABLE Tasks (
-    sur_key     SERIAL,
+-- Создание таблицы tasks
+CREATE TABLE tasks (
+    id          BIGINT GENERATED ALWAYS AS IDENTITY,
     project     VARCHAR(32) NOT NULL,
     header      VARCHAR(32) NOT NULL,
     priority    INTEGER NOT NULL,
     description TEXT,
-    status      VARCHAR(16) CHECK (status IN ('new', 'reopened', 'closed', 'in process')) NOT NULL,
+    status      VARCHAR(16) CHECK (status IN ('new', 'reopened', 'closed', 'in_process')) NOT NULL,
     estimate    INTEGER,
     spent       INTEGER,
     creator     VARCHAR(32),
     responsible VARCHAR(32),
     date_on     DATE,
-    FOREIGN KEY (project) REFERENCES Projects (name),
-    FOREIGN KEY (creator) REFERENCES Users (login),
-    FOREIGN KEY (responsible) REFERENCES Users (login),
-    PRIMARY KEY (sur_key)
+    CONSTRAINT tasks_pk PRIMARY KEY (id),
+    CONSTRAINT tasks_project_fk FOREIGN KEY (project) REFERENCES projects (name),
+    CONSTRAINT tasks_creator_fk FOREIGN KEY (creator) REFERENCES users (login),
+    CONSTRAINT tasks_responsible_fk FOREIGN KEY (responsible) REFERENCES users (login)
 );
 
--- Вставка данных в таблицу Users
-INSERT INTO Users (name, login, email, department) VALUES
-    ('Касаткин Артем',      'a.kasatkin',  'a.kasatkin@ya.ru',  'Administration'),
-    ('Петрова София',       's.petrova',   's.petrova@ya.ru',   'Accounting'),
-    ('Дроздов Федр',        'f.drozdov',   'f.drozdov@ya.ru',   'Production'),
-    ('Иванова Василина',    'v.ivanova',   'v.ivanova@ya.ru',   'Accounting'),
-    ('Беркут Алексей',      'a.berkut',    'a.berkut@ya.ru',    'Support'),
-    ('Белова Вера',         'v.belova',    'v.belova@ya.ru',    'Support'),
-    ('Макенрой Алексей',    'a.makenroy',  'a.makenroy@ya.ru',  'Administration');
+-- Вставка данных в таблицу users
+INSERT INTO users (name, login, email, department)
+VALUES 
+    ('Касаткин Артем',      'a_kasatkin',  'a.kasatkin@ya.ru',  'Administration'),
+    ('Петрова София',       's_petrova',   's.petrova@ya.ru',   'Accounting'),
+    ('Дроздов Федр',        'f_drozdov',   'f.drozdov@ya.ru',   'Production'),
+    ('Иванова Василина',    'v_ivanova',   'v.ivanova@ya.ru',   'Accounting'),
+    ('Беркут Алексей',      'a_berkut',    'a.berkut@ya.ru',    'Support'),
+    ('Белова Вера',         'v_belova',    'v.belova@ya.ru',    'Support'),
+    ('Макенрой Алексей',    'a_makenroy',  'a.makenroy@ya.ru',  'Administration');
 
--- Вставка данных в таблицу Projects
-INSERT INTO Projects (name, date_on, date_off) VALUES
-    ('РТК',           '2016-01-31', NULL),
-    ('СС.Контент',    '2015-02-23', '2016-12-31'),
-    ('Демо-Сибирь',   '2015-05-11', '2015-01-31'),
-    ('МВД-Онлайн',    '2015-05-22', '2016-01-31'),
-    ('Поддержка',     '2016-06-07', NULL);
+-- Вставка данных в таблицу projects
+INSERT INTO projects (name, date_on, date_off)
+VALUES 
+    ('РТК',           '2026-01-31', NULL),
+    ('СС_Контент',    '2025-02-23', '2026-12-31'),
+    ('Демо_Сибирь',   '2025-05-11', '2026-01-31'),
+    ('МВД_Онлайн',    '2025-05-22', '2026-01-31'),
+    ('Поддержка',     '2026-06-07', NULL);
 
--- Вставка данных в таблицу Tasks
-INSERT INTO Tasks (project, header, priority, status, creator, responsible, date_on, estimate, spent) VALUES
-    ('Поддержка',     'Task1',   12,   'new', 'a.berkut',    's.petrova',   NULL,        10,  15),
-    ('Демо-Сибирь',   'Task2',   228,  'new', 'v.belova',    's.petrova',   NULL,        52,  22),
-    ('РТК',           'Task3',   1337, 'new', 'a.makenroy',  's.petrova',   NULL,        12,  12),
-    ('Демо-Сибирь',   'Task4',   10,   'new', 'v.ivanova',   'a.makenroy',  NULL,        1,   100),
-    ('МВД-Онлайн',    'Task5',   61,   'new', 'a.berkut',    'f.drozdov',   NULL,        12,  22),
-    ('Поддержка',     'Task6',   127,  'new', 'a.makenroy',  's.petrova',   NULL,        12,  12),
-    ('РТК',           'Task7',   19,   'new', 'a.makenroy',  'v.belova',    NULL,        22,  35),
-    ('Демо-Сибирь',   'Task8',   1,    'new', 'a.makenroy',  's.petrova',   NULL,        94,  12),
-    ('МВД-Онлайн',    'Task9',   1,    'new', 'v.ivanova',   'f.drozdov',   NULL,        88,  24),
-    ('Демо-Сибирь',   'Task10',  11,   'new', 'a.makenroy',  'a.kasatkin',  '2015-01-01', 99,  2),
-    ('РТК',           'Task11',  22,   'new', 'v.ivanova',   'a.berkut',    '2016-04-01', NULL, NULL),
-    ('Демо-Сибирь',   'Task12',  3,    'new', 'a.makenroy',  'a.makenroy',  '2015-08-01', 66,  32),
-    ('СС.Контент',    'Task13',  1,    'new', 'a.makenroy',  'a.kasatkin',  '2015-08-02', 99,  2),
-    ('СС.Контент',    'Task14',  20,   'new', 'a.makenroy',  'a.kasatkin',  '2015-08-03', 22,  3),
-    ('СС.Контент',    'Task15',  20,   'new', 'a.makenroy',  NULL,          '2015-12-03', NULL, NULL);
+-- Вставка данных в таблицу tasks
+INSERT INTO tasks (project, header, priority, status, creator, responsible, date_on, estimate, spent)
+VALUES 
+    ('Поддержка',     'Task1',   12,   'new', 'a_berkut',    's_petrova',   NULL,         10,  15),
+    ('Демо_Сибирь',   'Task2',   228,  'new', 'v_belova',    's_petrova',   NULL,         52,  22),
+    ('РТК',           'Task3',   1337, 'new', 'a_makenroy',  's_petrova',   NULL,         12,  12),
+    ('Демо_Сибирь',   'Task4',   10,   'new', 'v_ivanova',   'a_makenroy',  NULL,         1,   100),
+    ('МВД_Онлайн',    'Task5',   61,   'new', 'a_berkut',    'f_drozdov',   NULL,         12,  22),
+    ('Поддержка',     'Task6',   127,  'new', 'a_makenroy',  's_petrova',   NULL,         12,  12),
+    ('РТК',           'Task7',   19,   'new', 'a_makenroy',  'v_belova',    NULL,         22,  35),
+    ('Демо_Сибирь',   'Task8',   1,    'new', 'a_makenroy',  's_petrova',   NULL,         94,  12),
+    ('МВД_Онлайн',    'Task9',   1,    'new', 'v_ivanova',   'f_drozdov',   NULL,         88,  24),
+    ('Демо_Сибирь',   'Task10',  11,   'new', 'a_makenroy',  'a_kasatkin',  '2025-01-01', 99,  2),
+    ('РТК',           'Task11',  22,   'new', 'v_ivanova',   'a_berkut',    '2026-04-01', NULL, NULL),
+    ('Демо_Сибирь',   'Task12',  3,    'new', 'a_makenroy',  'a_makenroy',  '2025-08-01', 66,  32),
+    ('СС_Контент',    'Task13',  1,    'new', 'a_makenroy',  'a_kasatkin',  '2025-08-02', 99,  2),
+    ('СС_Контент',    'Task14',  20,   'new', 'a_makenroy',  'a_kasatkin',  '2025-08-03', 22,  3),
+    ('СС_Контент',    'Task15',  20,   'new', 'a_makenroy',  NULL,          '2025-12-03', NULL, NULL);
 
 -- Выборка всех задач
-SELECT *
-FROM Tasks;
+SELECT id, project, header, priority, status, creator, responsible, date_on, estimate, spent
+FROM tasks;
 
 -- Выборка имени и отдела пользователей
 SELECT name, department
-FROM Users;
+FROM users;
 
 -- Выборка логина и email пользователей
 SELECT login, email
-FROM Users;
+FROM users;
 
 -- Выборка задач с приоритетом больше 50
-SELECT *
-FROM Tasks
+SELECT id, project, header, priority, status, creator, responsible, date_on, estimate, spent
+FROM tasks
 WHERE priority > 50;
 
 -- Выборка уникальных ответственных, исключая NULL
 SELECT DISTINCT responsible
-FROM Tasks
-WHERE responsible IS NOT NULL;
+FROM tasks
+WHERE responsible IS NOT NULL
+ORDER BY responsible;
 
 -- Объединение создателей и ответственных
-SELECT creator
-FROM Tasks
-UNION
+SELECT creator AS user_login
+FROM tasks
+WHERE creator IS NOT NULL
+UNION ALL
 SELECT responsible
-FROM Tasks;
+FROM tasks
+WHERE responsible IS NOT NULL
+ORDER BY user_login;
 
--- Выборка задач, где создатель не 's.petrova' и ответственный в списке
-SELECT sur_key, header
-FROM Tasks
-WHERE creator != 's.petrova'
-  AND responsible IN ('v.ivanova', 'a.makenroy', 'a.berkut');
+-- Выборка задач, где создатель не 's_petrova' и ответственный в списке
+SELECT id, header
+FROM tasks
+WHERE creator != 's_petrova'
+  AND responsible IN ('v_ivanova', 'a_makenroy', 'a_berkut');
 
--- Выборка задач с ответственным 'kasatkin' и датой в январе 2016
-SELECT *
-FROM Tasks
-WHERE responsible LIKE '%kasatkin%'
-  AND date_on BETWEEN '2016-01-01' AND '2016-01-03';
+-- Выборка задач с ответственным 'a_kasatkin' и датой в январе 2026
+SELECT id, project, header, priority, status, creator, responsible, date_on, estimate, spent
+FROM tasks
+WHERE responsible = 'a_kasatkin'
+  AND date_on BETWEEN '2026-01-01' AND '2026-01-31';
 
--- Выборка задач с ответственным 'petrov' и создателем из определённых отделов
-SELECT t.sur_key, t.header, d.department
-FROM Tasks t
-JOIN Users d ON t.creator = d.login
-WHERE t.responsible LIKE '%petrov%'
-  AND d.department IN ('Production', 'Accounting', 'Administration');
+-- Выборка задач с ответственным 's_petrova' и создателем из отделов
+SELECT t.id, t.header, u.department
+FROM tasks t
+JOIN users u ON t.creator = u.login
+WHERE t.responsible = 's_petrova'
+  AND u.department IN ('Production', 'Accounting', 'Administration');
 
 -- Выборка и обновление задач без ответственного
-SELECT *
-FROM Tasks
+SELECT id, project, header, priority, status, creator, responsible, date_on, estimate, spent
+FROM tasks
 WHERE responsible IS NULL;
 
-UPDATE Tasks
-SET responsible = 's.petrova'
+UPDATE tasks
+SET responsible = 's_petrova'
 WHERE responsible IS NULL;
 
--- Создание копии таблицы Tasks
-DROP TABLE IF EXISTS tasks2;
+-- Создание копии таблицы tasks
+DROP TABLE IF EXISTS tasks_copy CASCADE;
 
-CREATE TABLE tasks2 AS
-SELECT *
-FROM Tasks;
+CREATE TABLE tasks_copy (
+    id          BIGINT NOT NULL,
+    project     VARCHAR(32) NOT NULL,
+    header      VARCHAR(32) NOT NULL,
+    priority    INTEGER NOT NULL,
+    description TEXT,
+    status      VARCHAR(16) CHECK (status IN ('new', 'reopened', 'closed', 'in_process')) NOT NULL,
+    estimate    INTEGER,
+    spent       INTEGER,
+    creator     VARCHAR(32),
+    responsible VARCHAR(32),
+    date_on     DATE,
+    CONSTRAINT tasks_copy_pk PRIMARY KEY (id),
+    CONSTRAINT tasks_copy_project_fk FOREIGN KEY (project) REFERENCES projects (name),
+    CONSTRAINT tasks_copy_creator_fk FOREIGN KEY (creator) REFERENCES users (login),
+    CONSTRAINT tasks_copy_responsible_fk FOREIGN KEY (responsible) REFERENCES users (login)
+);
+
+INSERT INTO tasks_copy
+SELECT * FROM tasks;
 
 -- Выборка пользователей, чьё имя не заканчивается на 'a' и логин содержит 'r'
-SELECT *
-FROM Users
+SELECT name, login, email, department
+FROM users
 WHERE name NOT LIKE '%a'
   AND login LIKE '%r%';
