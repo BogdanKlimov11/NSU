@@ -1,4 +1,0 @@
-Alcohol:beer	900	0	0%
-Auto	6000	1400	23.3333%
-Food+Products	10000	780.33	7.8033%
-other	0	1000	0%
