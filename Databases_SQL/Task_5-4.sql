@@ -1,32 +1,35 @@
--- 5.4: INITIALIZE
-
+-- Удаление таблиц, если они существуют
 DROP TABLE IF EXISTS _files, _nodes CASCADE;
 
+-- Создание таблицы узлов (nodes)
 CREATE TABLE _nodes
 (
     id   SERIAL NOT NULL PRIMARY KEY,
-    path VARCHAR(100)
+    path VARCHAR(100) -- Путь к узлу
 );
 
+-- Создание таблицы файлов
 CREATE TABLE _files
 (
-    id       SERIAL  NOT NULL,
+    id       SERIAL NOT NULL,
     name     VARCHAR NOT NULL,
-    pid      INT     NOT NULL,
-    node_id  INT     NOT NULL,
-    size     INT,
-    created  DATE,
-    written  DATE    NOT NULL,
-    modified DATE,
+    pid      INT NOT NULL, -- Идентификатор родительской директории
+    node_id  INT NOT NULL, -- Идентификатор узла
+    size     INT, -- Размер файла
+    created  DATE, -- Дата создания
+    written  DATE NOT NULL, -- Дата записи
+    modified DATE, -- Дата модификации
     PRIMARY KEY (id, name, node_id),
     FOREIGN KEY (node_id) REFERENCES _nodes (id)
 );
 
+-- Вставка данных в таблицу узлов
 INSERT INTO _nodes (path)
 VALUES ('first comp'),
        ('second comp'),
        ('server');
 
+-- Вставка данных в таблицу файлов
 INSERT INTO _files (name, pid, node_id, size, created, written, modified)
 VALUES ('new folder', 0, 1, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
        ('mycomp', 0, 1, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
@@ -37,8 +40,7 @@ VALUES ('new folder', 0, 1, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
        ('sql', 2, 2, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
        ('old', 2, 2, 1000, '2018-01-01', '2018-05-23', '2018-01-01');
 
---5.4: functions
-
+-- Функция для получения ID файла по пути
 CREATE OR REPLACE FUNCTION get_id(path VARCHAR, dir INT)
     RETURNS INT AS
 $$
@@ -66,10 +68,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT *
-FROM get_id('sql', 1);
---******************************************************
+-- Тест функции get_id
+SELECT * FROM get_id('sql', 1);
 
+-- Функция для получения полного пути файла
 CREATE OR REPLACE FUNCTION get_full_path(fid INT)
     RETURNS VARCHAR AS
 $$
@@ -89,22 +91,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT *
-FROM get_full_path(get_id('sql', 1));
---******************************************************
+-- Тест функции get_full_path
+SELECT * FROM get_full_path(get_id('sql', 1));
 
+-- Функция для вычисления глубины пути
 CREATE OR REPLACE FUNCTION get_depth(s VARCHAR)
     RETURNS INT AS
 $$
 BEGIN
     RETURN LENGTH(regexp_replace(s, '[^/]', '', 'g'));
-end;
+END;
 $$ LANGUAGE plpgsql;
 
-SELECT *
-FROM get_depth('a/a/a/a/a');
---******************************************************
+-- Тест функции get_depth
+SELECT * FROM get_depth('a/a/a/a/a');
 
+-- Функция для создания файла
 CREATE OR REPLACE FUNCTION touch(fname VARCHAR, dirname VARCHAR, fnode INT, fsize INT, fcreated DATE, fchanged DATE)
     RETURNS VARCHAR AS
 $$
@@ -127,13 +129,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT *
-FROM touch('hello', 'new folder', 1, 1024, now()::TIMESTAMP::date, now()::TIMESTAMP::date);
+-- Тест функции touch и выборка файлов
+SELECT * FROM touch('hello', 'new folder', 1, 1024, now()::TIMESTAMP::date, now()::TIMESTAMP::date);
+SELECT * FROM _files;
 
-SELECT *
-FROM _files;
---******************************************************
-
+-- Функция для удаления файла
 CREATE OR REPLACE FUNCTION remove(fname VARCHAR)
     RETURNS VARCHAR AS
 $$
@@ -154,14 +154,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT *
-FROM _files;
-SELECT *
-FROM remove('new folder/sql2');
-SELECT *
-FROM _files;
---************************************************
+-- Тест функции remove и выборка файлов
+SELECT * FROM _files;
+SELECT * FROM remove('new folder/sql2');
+SELECT * FROM _files;
 
+-- Функция для отображения содержимого директории
 CREATE OR REPLACE FUNCTION ls(dirname VARCHAR)
     RETURNS SETOF _files AS
 $$
@@ -183,10 +181,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT *
-FROM ls('mycomp');
---************************************************************
+-- Тест функции ls
+SELECT * FROM ls('mycomp');
 
+-- Функция для переименования файла
 CREATE OR REPLACE FUNCTION rename(fname VARCHAR, new_name VARCHAR)
     RETURNS VARCHAR AS
 $$
@@ -200,7 +198,7 @@ BEGIN
     ELSE
         IF EXISTS(SELECT *
                   FROM _files
-                  WHERE _files.name = fname
+                  WHERE _files.name = new_name
                     AND _files.pid = (SELECT pid FROM _files WHERE id = fid)) THEN
             RETURN 'The file already exists';
         ELSE
@@ -211,15 +209,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-select *
-from _files;
-select *
-from rename('mycomp/sql', 'nadoelo');
-select *
-from _files;
+-- Тест функции rename и выборка файлов
+SELECT * FROM _files;
+SELECT * FROM rename('mycomp/sql', 'nadoelo');
+SELECT * FROM _files;
 
---************************************************************
-
+-- Функция для перемещения файла
 CREATE OR REPLACE FUNCTION move(fname VARCHAR, dirname VARCHAR)
     RETURNS VARCHAR AS
 $$
@@ -248,17 +243,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT *
-FROM _files;
-SELECT *
-FROM move('mycomp/nadoelo', '');
-SELECT *
-FROM _files;
-SELECT *
-FROM ls('');
+-- Тест функции move и выборка файлов
+SELECT * FROM _files;
+SELECT * FROM move('mycomp/nadoelo', '');
+SELECT * FROM _files;
+SELECT * FROM ls('');
 
---****************--*****************--*****************--*****************
-
+-- Функция для поиска файлов по маске и глубине
 CREATE OR REPLACE FUNCTION find(mask VARCHAR, depth INT)
     RETURNS SETOF VARCHAR AS
 $$
@@ -271,7 +262,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT * from _files;
-
-SELECT *
-FROM find('%sql%', 1);
+-- Тест функции find и выборка файлов
+SELECT * FROM _files;
+SELECT * FROM find('%sql%', 1);
