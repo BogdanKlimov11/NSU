@@ -1,51 +1,48 @@
 import cv2
-import numpy
-from math import *
+import numpy as np
+import math
 
-# Матрица камеры (фокусное расстояние и координаты главной точки)
-mtx = numpy.matrix([[920.0, 0.0, 650.0], [0.0, 930.0, 320.0], [0.0, 0.0, 1.0]])
-# Коэффициенты искажения камеры
-dist = numpy.matrix([[0.06], [-0.1], [-0.006], [0.009], [0]])
+class CameraTest:
+    """Класс для тестирования камеры с ArUco-маркерами."""
 
-# Открытие видеопотока с камеры
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # Установка ширины изображения
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)  # Установка высоты изображения
+    def __init__(self):
+        """Инициализация камеры и параметров ArUco."""
+        self._camera_matrix = np.array([[920.0, 0.0, 650.0], [0.0, 930.0, 320.0], [0.0, 0.0, 1.0]])
+        self._dist_coeffs = np.array([[0.06], [-0.1], [-0.006], [0.009], [0]])
+        self._cap = cv2.VideoCapture(0)
+        self._cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        self._cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
-while True:
-    ret, img = cap.read()  # Захват одного кадра
-    arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_1000)  # Загрузка словаря маркеров ArUco
-    print("1")
-    
-    # Обнаружение маркеров ArUco на изображении
-    (corners, ids, rejected) = cv2.aruco.detectMarkers(img, dictionary=arucoDict)
-    if len(corners) > 0:  # Если маркеры найдены
-        # Отображение обнаруженных маркеров
-        cv2.aruco.drawDetectedMarkers(img, corners, ids)
-        
-        # Оценка положения и ориентации маркеров
-        rvec, tvec, _ =  cv2.aruco.estimatePoseSingleMarkers(corners, 0.12, mtx, dist)
-        print("Detected: ", tvec)  # Печать трансляции маркера
+    def run(self):
+        """Захват и обработка изображений с камеры."""
+        try:
+            while True:
+                ret, img = self._cap.read()
+                if not ret:
+                    print("Не удалось захватить кадр с камеры")
+                    continue
 
-        # Преобразование в матрицу вращения с помощью Rodrigues
-        R, jac = cv2.Rodrigues(rvec, None, None)
+                aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_1000)
+                parameters = cv2.aruco.DetectorParameters()
+                detector = cv2.aruco.ArucoDetector(aruco_dict, parameters)
+                corners, ids, _ = detector.detectMarkers(img)
 
-        # Вычисление угла ориентации маркера относительно оси Z
-        g_angle = atan2(R[1,0], R[0,0])
+                if ids is not None and len(corners) > 0:
+                    cv2.aruco.drawDetectedMarkers(img, corners, ids)
+                    rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners, 0.12, self._camera_matrix, self._dist_coeffs)
+                    if tvec is not None and len(tvec) > 0:
+                        R, _ = cv2.Rodrigues(rvec[0])
+                        gamma = math.atan2(R[1, 0], R[0, 0])
+                        print(f"Detected: x={tvec[0][0][0]:.2f}, y={tvec[0][0][1]:.2f}, gamma={gamma:.2f}")
+                        cv2.drawFrameAxes(img, self._camera_matrix, self._dist_coeffs, rvec[0], tvec[0], 0.1)
 
-        # Печать угла ориентации и координат маркера
-        print("Gamma: ", g_angle, tvec[0][0][0], tvec[0][0][1])
+                cv2.imshow('ArUco Detection', img)
+                if cv2.waitKey(10) == 27:  # Выход по ESC
+                    break
+        finally:
+            self._cap.release()
+            cv2.destroyAllWindows()
 
-        # Отображение осей на изображении для маркера
-        cv2.drawFrameAxes(img, mtx, dist, rvec, tvec, length=0.1)
 
-    # Отображение изображения с обнаруженными маркерами
-    cv2.imshow('output', img)
-
-    key = cv2.waitKey(10)  # Ожидание 10 мс для нажатия клавиши
-    # if key == 27:  # Прерывание цикла по нажатию клавиши ESC
-    #     break
-
-# Закрытие видеопотока и окон OpenCV
-cap.release()
-cv2.destroyAllWindows()
+if __name__ == '__main__':
+    CameraTest().run()
