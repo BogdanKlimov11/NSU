@@ -1,130 +1,166 @@
-DROP TABLE IF EXISTS table1, table2;
+-- Удаление таблиц, если они существуют
+DROP TABLE IF EXISTS table_one, table_two CASCADE;
 
-CREATE TABLE table1
-(
-    a INT,
-    b INT
+-- Создание таблицы table_one
+CREATE TABLE table_one (
+    value_a  BIGINT,
+    value_b  BIGINT
 );
 
-CREATE TABLE table2
-(
-    a INT,
-    b INT
+-- Создание таблицы table_two
+CREATE TABLE table_two (
+    value_a  BIGINT,
+    value_b  BIGINT
 );
 
-DROP FUNCTION IF EXISTS foo();
+-- Удаление функции foo, если она существует
+DROP FUNCTION IF EXISTS execute_foo() CASCADE;
 
-CREATE OR REPLACE FUNCTION foo(
-) RETURNS int AS
-$$
+-- Создание функции для вставки данных с использованием точки сохранения
+CREATE OR REPLACE FUNCTION execute_foo()
+RETURNS BIGINT AS $$
 BEGIN
-    INSERT INTO table1
-    VALUES (1);
-    RETURN 1;
+    INSERT INTO table_one (value_a, value_b) VALUES (1, NULL);
     SAVEPOINT my_savepoint;
-    INSERT INTO table1
-    VALUES (2);
+    INSERT INTO table_one (value_a, value_b) VALUES (2, NULL);
     ROLLBACK TO SAVEPOINT my_savepoint;
-    INSERT INTO table1
-    VALUES (3);
-    COMMIT;
+    INSERT INTO table_one (value_a, value_b) VALUES (3, NULL);
+    RETURN 1;
 EXCEPTION
-    WHEN OTHERS THEN RETURN 0;
-end
-$$
-    LANGUAGE 'plpgsql';
-
-SELECT *
-FROM foo();
-
-INSERT INTO table1
-VALUES (2, 2);
-
-SELECT *
-FROM table1;
-
--- *****************      b (circle)            *****************
-
-CREATE OR REPLACE FUNCTION delfromb() RETURNS TRIGGER AS
-$$
-BEGIN
-    DELETE FROM table1 WHERE a = old.a;
-    RETURN old;
+    WHEN OTHERS THEN
+        RETURN 0;
 END;
-$$
-    LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION delfroma() RETURNS TRIGGER AS
-$$
+-- Выполнение функции execute_foo
+SELECT execute_foo() AS result;
+
+-- Вставка тестовых данных в table_one
+INSERT INTO table_one (value_a, value_b)
+VALUES (2, 2);
+
+-- Выборка всех данных из table_one
+SELECT * FROM table_one;
+
+-- Удаление функций и триггеров для каскадного удаления
+DROP FUNCTION IF EXISTS delete_from_table_two() CASCADE;
+DROP FUNCTION IF EXISTS delete_from_table_one() CASCADE;
+DROP TRIGGER IF EXISTS trigger_table_one ON table_one;
+DROP TRIGGER IF EXISTS trigger_table_two ON table_two;
+
+-- Создание функции для удаления связанных записей из table_two
+CREATE OR REPLACE FUNCTION delete_from_table_two()
+RETURNS TRIGGER AS $$
 BEGIN
-    DELETE FROM table2 WHERE a = old.a;
-    RETURN old;
+    -- Предотвращение циклической рекурсии
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM table_two 
+        WHERE value_a = OLD.value_a 
+        AND pg_trigger_depth() < 2
+    ) THEN
+        RETURN OLD;
+    END IF;
+
+    DELETE FROM table_two WHERE value_a = OLD.value_a;
+    RETURN OLD;
 END;
-$$
-    LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS tg_a ON b;
-DROP TRIGGER IF EXISTS tg_b ON a;
+-- Создание функции для удаления связанных записей из table_one
+CREATE OR REPLACE FUNCTION delete_from_table_one()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Предотвращение циклической рекурсии
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM table_one 
+        WHERE value_a = OLD.value_a 
+        AND pg_trigger_depth() < 2
+    ) THEN
+        RETURN OLD;
+    END IF;
 
-CREATE TRIGGER tg_a
-    BEFORE DELETE
-    ON table1
+    DELETE FROM table_one WHERE value_a = OLD.value_a;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Создание триггера для table_one
+CREATE TRIGGER trigger_table_one
+    BEFORE DELETE ON table_one
     FOR EACH ROW
-EXECUTE PROCEDURE delfromb();
+    EXECUTE FUNCTION delete_from_table_two();
 
-CREATE TRIGGER tg_b
-    BEFORE DELETE
-    ON table2
+-- Создание триггера для table_two
+CREATE TRIGGER trigger_table_two
+    BEFORE DELETE ON table_two
     FOR EACH ROW
-EXECUTE PROCEDURE delfroma();
+    EXECUTE FUNCTION delete_from_table_one();
 
-INSERT INTO table1
-VALUES (1, 1);
-INSERT INTO table1
-VALUES (2, 2);
-INSERT INTO table2
-VALUES (1, 1);
-INSERT INTO table2
-VALUES (2, 2);
+-- Вставка тестовых данных в table_one
+INSERT INTO table_one (value_a, value_b)
+VALUES 
+    (1, 1),
+    (2, 2);
 
-delete
-from table1
-where a = 1;
+-- Вставка тестовых данных в table_two
+INSERT INTO table_two (value_a, value_b)
+VALUES 
+    (1, 1),
+    (2, 2);
 
-SELECT *
-FROM table1;
+-- Удаление записи из table_one
+DELETE FROM table_one WHERE value_a = 1;
 
--- *****************      c (recursion)         *****************
+-- Выборка всех данных из table_one
+SELECT * FROM table_one;
 
-DROP TABLE IF EXISTS recursion;
+-- Удаление таблицы recursion, если она существует
+DROP TABLE IF EXISTS recursion CASCADE;
 
-CREATE TABLE IF NOT EXISTS recursion
-(
-    id   SERIAL PRIMARY KEY,
-    data VARCHAR(80)
+-- Создание таблицы для тестирования рекурсии
+CREATE TABLE recursion (
+    id    BIGINT GENERATED ALWAYS AS IDENTITY,
+    data  VARCHAR(80) NOT NULL,
+    CONSTRAINT recursion_pk PRIMARY KEY (id)
 );
 
-INSERT INTO recursion
-VALUES (7, '20');
+-- Вставка тестовых данных в recursion
+INSERT INTO recursion (data)
+VALUES ('20');
 
-CREATE OR REPLACE FUNCTION upd() RETURNS TRIGGER AS
-$$
+-- Удаление функции и триггера для обновления
+DROP FUNCTION IF EXISTS update_recursion() CASCADE;
+DROP TRIGGER IF EXISTS trigger_recursion ON recursion;
+
+-- Создание функции для обновления данных с предотвращением рекурсии
+CREATE OR REPLACE FUNCTION update_recursion()
+RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE recursion SET data = 'LOOOOOOOP' WHERE id = old.id;
-    RETURN old;
+    -- Предотвращение бесконечной рекурсии
+    IF pg_trigger_depth() > 1 THEN
+        RETURN NEW;
+    END IF;
+
+    -- Выполнение обновления только один раз
+    UPDATE recursion 
+    SET data = 'LOOOOOOOP'
+    WHERE id = OLD.id;
+    RETURN NEW;
 END;
-$$
-    LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
-CREATE TRIGGER my_tgA
-    BEFORE UPDATE
-    ON recursion
+-- Создание триггера для таблицы recursion
+CREATE TRIGGER trigger_recursion
+    BEFORE UPDATE ON recursion
     FOR EACH ROW
-EXECUTE PROCEDURE upd();
+    EXECUTE FUNCTION update_recursion();
 
+-- Тестовое обновление данных в recursion
 UPDATE recursion
-SET data = 'start loop'
-WHERE id = 7;
+SET data = 'start_loop'
+WHERE id = 1;
 
-SELECT *
-FROM recursion;
+-- Выборка всех данных из recursion
+SELECT * FROM recursion;
