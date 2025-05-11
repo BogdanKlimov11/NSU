@@ -1,267 +1,307 @@
 -- Удаление таблиц, если они существуют
-DROP TABLE IF EXISTS _files, _nodes CASCADE;
+DROP TABLE IF EXISTS files, nodes CASCADE;
 
--- Создание таблицы узлов (nodes)
-CREATE TABLE _nodes
-(
-    id   SERIAL NOT NULL PRIMARY KEY,
-    path VARCHAR(100) -- Путь к узлу
+-- Создание таблицы узлов
+CREATE TABLE nodes (
+    id    BIGINT GENERATED ALWAYS AS IDENTITY,
+    path  VARCHAR(100) NOT NULL,
+    CONSTRAINT nodes_pk PRIMARY KEY (id)
 );
 
 -- Создание таблицы файлов
-CREATE TABLE _files
-(
-    id       SERIAL NOT NULL,
-    name     VARCHAR NOT NULL,
-    pid      INT NOT NULL, -- Идентификатор родительской директории
-    node_id  INT NOT NULL, -- Идентификатор узла
-    size     INT, -- Размер файла
-    created  DATE, -- Дата создания
-    written  DATE NOT NULL, -- Дата записи
-    modified DATE, -- Дата модификации
-    PRIMARY KEY (id, name, node_id),
-    FOREIGN KEY (node_id) REFERENCES _nodes (id)
+CREATE TABLE files (
+    id         BIGINT GENERATED ALWAYS AS IDENTITY,
+    name       VARCHAR(255) NOT NULL,
+    parent_id  BIGINT NOT NULL,
+    node_id    BIGINT NOT NULL,
+    size       BIGINT,
+    created    DATE,
+    written    DATE NOT NULL,
+    modified   DATE,
+    CONSTRAINT files_pk PRIMARY KEY (id, name, node_id),
+    CONSTRAINT files_node_fk FOREIGN KEY (node_id) REFERENCES nodes (id)
 );
 
 -- Вставка данных в таблицу узлов
-INSERT INTO _nodes (path)
-VALUES ('first comp'),
-       ('second comp'),
-       ('server');
+INSERT INTO nodes (path)
+VALUES 
+    ('first_comp'),
+    ('second_comp'),
+    ('server');
 
 -- Вставка данных в таблицу файлов
-INSERT INTO _files (name, pid, node_id, size, created, written, modified)
-VALUES ('new folder', 0, 1, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
-       ('mycomp', 0, 1, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
-       ('sql', 1, 2, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
-       ('sql1', 1, 1, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
-       ('sql2', 1, 2, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
-       ('sql3', 1, 3, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
-       ('sql', 2, 2, 1000, '2018-01-01', '2018-05-23', '2018-01-01'),
-       ('old', 2, 2, 1000, '2018-01-01', '2018-05-23', '2018-01-01');
+INSERT INTO files (name, parent_id, node_id, size, created, written, modified)
+VALUES 
+    ('new_folder', 0, 1, 1000, '2025-01-01', '2025-05-23', '2025-01-01'),
+    ('mycomp', 0, 1, 1000, '2025-01-01', '2025-05-23', '2025-01-01'),
+    ('sql', 1, 2, 1000, '2025-01-01', '2025-05-23', '2025-01-01'),
+    ('sql1', 1, 1, 1000, '2025-01-01', '2025-05-23', '2025-01-01'),
+    ('sql2', 1, 2, 1000, '2025-01-01', '2025-05-23', '2025-01-01'),
+    ('sql3', 1, 3, 1000, '2025-01-01', '2025-05-23', '2025-01-01'),
+    ('sql', 2, 2, 1000, '2025-01-01', '2025-05-23', '2025-01-01'),
+    ('old', 2, 2, 1000, '2025-01-01', '2025-05-23', '2025-01-01');
 
 -- Функция для получения ID файла по пути
-CREATE OR REPLACE FUNCTION get_id(path VARCHAR, dir INT)
-    RETURNS INT AS
-$$
+CREATE OR REPLACE FUNCTION get_file_id(file_path VARCHAR(255), directory_id BIGINT)
+RETURNS BIGINT AS $$
 DECLARE
-    pos INT;
-    res INT;
+    slash_pos  BIGINT;
+    result_id  BIGINT;
 BEGIN
-    IF path = '' THEN RETURN dir; END IF;
-    SELECT position('/' in path) INTO pos;
-    IF pos = 0 THEN
-        SELECT id FROM _files WHERE _files.pid = dir AND _files.name = path LIMIT 1 INTO res;
-        RETURN coalesce(res, -1);
+    IF file_path = '' THEN 
+        RETURN directory_id; 
+    END IF;
+
+    slash_pos := POSITION('/' IN file_path);
+    IF slash_pos = 0 THEN
+        SELECT id INTO result_id
+        FROM files
+        WHERE parent_id = directory_id AND name = file_path
+        LIMIT 1;
+        RETURN COALESCE(result_id, -1);
     ELSE
-        SELECT id
-        FROM _files
-        WHERE _files.pid = dir
-          AND _files.name = (SELECT substring(path, 1, pos - 1))
-        LIMIT 1 INTO res;
-        IF res IS NULL THEN
+        SELECT id INTO result_id
+        FROM files
+        WHERE parent_id = directory_id
+          AND name = SUBSTRING(file_path FROM 1 FOR slash_pos - 1)
+        LIMIT 1;
+        IF result_id IS NULL THEN
             RETURN -1;
         ELSE
-            RETURN get_id((select substring(path, pos + 1)), res);
+            RETURN get_file_id(SUBSTRING(file_path FROM slash_pos + 1), result_id);
         END IF;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
 
--- Тест функции get_id
-SELECT * FROM get_id('sql', 1);
+-- Тест функции get_file_id
+SELECT get_file_id('sql', 1) AS file_id;
 
 -- Функция для получения полного пути файла
-CREATE OR REPLACE FUNCTION get_full_path(fid INT)
-    RETURNS VARCHAR AS
-$$
+CREATE OR REPLACE FUNCTION get_full_path(file_id BIGINT)
+RETURNS VARCHAR(255) AS $$
 DECLARE
-    r _files%ROWTYPE;
+    file_record files%ROWTYPE;
 BEGIN
-    IF NOT EXISTS(SELECT * FROM _files WHERE id = fid) THEN
+    IF NOT EXISTS (SELECT 1 FROM files WHERE id = file_id) THEN
         RETURN 'The file does not exist';
-    ELSE
-        SELECT * FROM _files WHERE id = fid INTO r;
-        IF r.pid = 0 THEN
-            RETURN r.name;
-        ELSE
-            RETURN concat(get_full_path(r.pid), '/', r.name);
-        END IF;
     END IF;
+
+    SELECT * INTO file_record 
+    FROM files 
+    WHERE-letter id = file_id;
+
+    IF file_record.parent_id = 0 THEN
+        RETURN file_record.name;
+    END IF;
+
+    RETURN get_full_path(file_record.parent_id) || '/' || file_record.name;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Тест функции get_full_path
-SELECT * FROM get_full_path(get_id('sql', 1));
+SELECT get_full_path(get_file_id('sql', 1)) AS full_path;
 
 -- Функция для вычисления глубины пути
-CREATE OR REPLACE FUNCTION get_depth(s VARCHAR)
-    RETURNS INT AS
-$$
+CREATE OR REPLACE FUNCTION get_path_depth(path VARCHAR(255))
+RETURNS INTEGER AS $$
 BEGIN
-    RETURN LENGTH(regexp_replace(s, '[^/]', '', 'g'));
+    RETURN LENGTH(REGEXP_REPLACE(path, '[^/]', '', 'g'));
 END;
 $$ LANGUAGE plpgsql;
 
--- Тест функции get_depth
-SELECT * FROM get_depth('a/a/a/a/a');
+-- Тест функции get_path_depth
+SELECT get_path_depth('a/a/a/a/a') AS path_depth;
 
 -- Функция для создания файла
-CREATE OR REPLACE FUNCTION touch(fname VARCHAR, dirname VARCHAR, fnode INT, fsize INT, fcreated DATE, fchanged DATE)
-    RETURNS VARCHAR AS
-$$
+CREATE OR REPLACE FUNCTION create_file(
+    file_name VARCHAR(255), 
+    dir_name VARCHAR(255), 
+    node_id BIGINT, 
+    file_size BIGINT, 
+    created_date DATE, 
+    modified_date DATE
+)
+RETURNS VARCHAR(255) AS $$
 DECLARE
-    dir INT;
+    dir_id BIGINT;
 BEGIN
-    IF fname LIKE '%/%' THEN RETURN 'Filename can not contain /'; END IF;
-    SELECT get_id(dirname, 0) INTO dir;
-    IF dir != 0 AND NOT EXISTS(SELECT * FROM _files WHERE _files.id = dir) THEN
-        RETURN 'Parent directory does not exist';
-    ELSE
-        IF exists(SELECT * FROM _files WHERE _files.name = fname AND _files.pid = dir) THEN
-            RETURN 'The file already exists';
-        ELSE
-            INSERT INTO _files (name, pid, node_id, size, created, written, modified)
-            VALUES (fname, dir, fnode, fsize, fcreated, now(), fchanged);
-            RETURN 'OK';
-        END IF;
+    IF file_name LIKE '%/%' THEN 
+        RETURN 'Filename cannot contain /';
     END IF;
+
+    dir_id := get_file_id(dir_name, 0);
+    IF dir_id != 0 AND NOT EXISTS (SELECT 1 FROM files WHERE id = dir_id) THEN
+        RETURN 'Parent directory does not exist';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1 
+        FROM files 
+        WHERE name = file_name AND parent_id = dir_id
+    ) THEN
+        RETURN 'The file already exists';
+    END IF;
+
+    INSERT INTO files (name, parent_id, node_id, size, created, written, modified)
+    VALUES (file_name, dir_id, node_id, file_size, created_date, CURRENT_DATE, modified_date);
+
+    RETURN 'OK';
 END;
 $$ LANGUAGE plpgsql;
 
--- Тест функции touch и выборка файлов
-SELECT * FROM touch('hello', 'new folder', 1, 1024, now()::TIMESTAMP::date, now()::TIMESTAMP::date);
-SELECT * FROM _files;
+-- Тест функции create_file и выборка файлов
+SELECT create_file(
+    'hello', 
+    'new_folder', 
+    1, 
+    1024, 
+    CURRENT_DATE, 
+    CURRENT_DATE
+) AS result;
+SELECT * FROM files;
 
 -- Функция для удаления файла
-CREATE OR REPLACE FUNCTION remove(fname VARCHAR)
-    RETURNS VARCHAR AS
-$$
+CREATE OR REPLACE FUNCTION remove_file(file_name VARCHAR(255))
+RETURNS VARCHAR(255) AS $$
 DECLARE
-    fid INT;
+    file_id BIGINT;
 BEGIN
-    SELECT get_id(fname, 0) INTO fid;
-    IF fid = -1 THEN
+    file_id := get_file_id(file_name, 0);
+    IF file_id = -1 THEN
         RETURN 'The file does not exist';
-    ELSE
-        IF ((SELECT COUNT(*) FROM _files WHERE pid = get_id(fname, 0)) <> 0) THEN
-            RETURN 'This file have depends';
-        ELSE
-            DELETE FROM _files CASCADE WHERE id = fid;
-            RETURN 'OK';
-        END IF;
     END IF;
+
+    IF (SELECT COUNT(*) FROM files WHERE parent_id = file_id) > 0 THEN
+        RETURN 'This file has dependencies';
+    END IF;
+
+    DELETE FROM files WHERE id = file_id;
+    RETURN 'OK';
 END;
 $$ LANGUAGE plpgsql;
 
--- Тест функции remove и выборка файлов
-SELECT * FROM _files;
-SELECT * FROM remove('new folder/sql2');
-SELECT * FROM _files;
+-- Тест функции remove_file и выборка файлов
+SELECT * FROM files;
+SELECT remove_file('new_folder/sql2') AS result;
+SELECT * FROM files;
 
 -- Функция для отображения содержимого директории
-CREATE OR REPLACE FUNCTION ls(dirname VARCHAR)
-    RETURNS SETOF _files AS
-$$
+CREATE OR REPLACE FUNCTION list_directory(dir_name VARCHAR(255))
+RETURNS SETOF files AS $$
 DECLARE
-    r   _files%ROWTYPE;
-    dir INT;
+    dir_id BIGINT;
 BEGIN
-    SELECT get_id(dirname, 0) INTO dir;
-    IF dir != 0 AND NOT EXISTS(SELECT * FROM _files WHERE _files.id = dir) THEN
-        RETURN QUERY (SELECT *);
-    ELSE
-        FOR r IN
-            SELECT * FROM _files WHERE pid = dir
-            LOOP
-                RETURN NEXT r;
-            END LOOP;
-        RETURN;
+    dir_id := get_file_id(dir_name, 0);
+    IF dir_id != 0 AND NOT EXISTS (SELECT 1 FROM files WHERE id = dir_id) THEN
+        RETURN QUERY SELECT * FROM files WHERE FALSE;
     END IF;
+
+    RETURN QUERY 
+    SELECT * FROM files WHERE parent_id = dir_id;
 END;
 $$ LANGUAGE plpgsql;
 
--- Тест функции ls
-SELECT * FROM ls('mycomp');
+-- Тест функции list_directory
+SELECT * FROM list_directory('mycomp');
 
 -- Функция для переименования файла
-CREATE OR REPLACE FUNCTION rename(fname VARCHAR, new_name VARCHAR)
-    RETURNS VARCHAR AS
-$$
+CREATE OR REPLACE FUNCTION rename_file(file_name VARCHAR(255), new_name VARCHAR(255))
+RETURNS VARCHAR(255) AS $$
 DECLARE
-    fid INT;
+    file_id BIGINT;
+    parent_id BIGINT;
 BEGIN
-    IF new_name LIKE '%/%' THEN RETURN 'Filename can not contain /'; END IF;
-    SELECT get_id(fname, 0) INTO fid;
-    IF fid = -1 THEN
-        RETURN 'The file does not exist';
-    ELSE
-        IF EXISTS(SELECT *
-                  FROM _files
-                  WHERE _files.name = new_name
-                    AND _files.pid = (SELECT pid FROM _files WHERE id = fid)) THEN
-            RETURN 'The file already exists';
-        ELSE
-            UPDATE _files SET name = new_name, modified = now() WHERE id = fid;
-            RETURN 'OK';
-        END IF;
+    IF new_name LIKE '%/%' THEN 
+        RETURN 'Filename cannot contain /';
     END IF;
+
+    file_id := get_file_id(file_name, 0);
+    IF file_id = -1 THEN
+        RETURN 'The file does not exist';
+    END IF;
+
+    SELECT parent_id INTO parent_id 
+    FROM files 
+    WHERE id = file_id;
+
+    IF EXISTS (
+        SELECT 1 
+        FROM files 
+        WHERE name = new_name AND parent_id = parent_id
+    ) THEN
+        RETURN 'The file already exists';
+    END IF;
+
+    UPDATE files 
+    SET name = new_name, modified = CURRENT_DATE 
+    WHERE id = file_id;
+
+    RETURN 'OK';
 END;
 $$ LANGUAGE plpgsql;
 
--- Тест функции rename и выборка файлов
-SELECT * FROM _files;
-SELECT * FROM rename('mycomp/sql', 'nadoelo');
-SELECT * FROM _files;
+-- Тест функции rename_file и выборка файлов
+SELECT * FROM files;
+SELECT rename_file('mycomp/sql', 'nadoelo') AS result;
+SELECT * FROM files;
 
 -- Функция для перемещения файла
-CREATE OR REPLACE FUNCTION move(fname VARCHAR, dirname VARCHAR)
-    RETURNS VARCHAR AS
-$$
+CREATE OR REPLACE FUNCTION move_file(file_name VARCHAR(255), dir_name VARCHAR(255))
+RETURNS VARCHAR(255) AS $$
 DECLARE
-    fid INT;
-    dir INT;
-    fn  VARCHAR;
+    file_id BIGINT;
+    dir_id BIGINT;
+    base_name VARCHAR(255);
 BEGIN
-    SELECT get_id(dirname, 0) INTO dir;
-    IF dir = -1 THEN
+    dir_id := get_file_id(dir_name, 0);
+    IF dir_id = -1 THEN
         RETURN 'New parent directory does not exist';
-    ELSE
-        SELECT get_id(fname, 0) INTO fid;
-        SELECT right(fname, position('\' IN reverse(fname)) - 1) INTO fn;
-        IF fid = -1 THEN
-            RETURN 'The file does not exist';
-        ELSE
-            IF EXISTS(SELECT * FROM _files WHERE _files.name = fn AND _files.pid = dir) THEN
-                RETURN 'The files with this name already exists in this folder';
-            ELSE
-                UPDATE _files SET pid = dir, modified = now() WHERE fid = id;
-                RETURN 'OK';
-            END IF;
-        END IF;
     END IF;
+
+    file_id := get_file_id(file_name, 0);
+    base_name := RIGHT(file_name, POSITION('/' IN REVERSE(file_name)) - 1);
+    IF file_id = -1 THEN
+        RETURN 'The file does not exist';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1 
+        FROM files 
+        WHERE name = base_name AND parent_id = dir_id
+    ) THEN
+        RETURN 'A file with this name already exists in the destination folder';
+    END IF;
+
+    UPDATE files 
+    SET parent_id = dir_id, modified = CURRENT_DATE 
+    WHERE id = file_id;
+
+    RETURN 'OK';
 END;
 $$ LANGUAGE plpgsql;
 
--- Тест функции move и выборка файлов
-SELECT * FROM _files;
-SELECT * FROM move('mycomp/nadoelo', '');
-SELECT * FROM _files;
-SELECT * FROM ls('');
+-- Тест функции move_file и выборка файлов
+SELECT * FROM files;
+SELECT move_file('mycomp/nadoelo', '') AS result;
+SELECT * FROM files;
+SELECT * FROM list_directory('');
 
 -- Функция для поиска файлов по маске и глубине
-CREATE OR REPLACE FUNCTION find(mask VARCHAR, depth INT)
-    RETURNS SETOF VARCHAR AS
-$$
+CREATE OR REPLACE FUNCTION find_files(search_mask VARCHAR(255), max_depth INTEGER)
+RETURNS SETOF VARCHAR(255) AS $$
 BEGIN
     RETURN QUERY
-        SELECT path
-        FROM (SELECT get_full_path(id) AS path FROM _files) AS p
-        WHERE p.path LIKE mask
-          AND (SELECT get_depth(p.path)) < depth + 1;
+    SELECT full_path
+    FROM (
+        SELECT get_full_path(id) AS full_path 
+        FROM files
+    ) AS paths
+    WHERE full_path LIKE search_mask
+      AND get_path_depth(full_path) < max_depth + 1;
 END;
 $$ LANGUAGE plpgsql;
 
--- Тест функции find и выборка файлов
-SELECT * FROM _files;
-SELECT * FROM find('%sql%', 1);
+-- Тест функции find_files и выборка файлов
+SELECT * FROM files;
+SELECT * FROM find_files('%sql%', 1);
