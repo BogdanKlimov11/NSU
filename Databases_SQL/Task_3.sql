@@ -1,190 +1,189 @@
---------------------- 3.1: table level
+-- 3-1: Управление целостностью данных
 
-DROP TABLE IF EXISTS a, b;
+-- Удаление таблиц, если они существуют
+DROP TABLE IF EXISTS parent_table, child_table CASCADE;
 
-CREATE TABLE a
-(
-  id   SERIAL PRIMARY KEY,
-  data VARCHAR(200)
+-- Создание таблицы parent_table
+CREATE TABLE parent_table (
+    id    BIGINT GENERATED ALWAYS AS IDENTITY,
+    data  VARCHAR(200) NOT NULL,
+    CONSTRAINT parent_table_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE b
-(
-  id   SERIAL PRIMARY KEY,
-  data VARCHAR(32),
-  aid  INT,
-  FOREIGN KEY (aid) REFERENCES a (id)
+-- Создание таблицы child_table
+CREATE TABLE child_table (
+    id        BIGINT GENERATED ALWAYS AS IDENTITY,
+    data      VARCHAR(32) NOT NULL,
+    parent_id BIGINT NOT NULL,
+    CONSTRAINT child_table_pk PRIMARY KEY (id),
+    CONSTRAINT child_table_parent_fk FOREIGN KEY (parent_id) REFERENCES parent_table (id) ON DELETE CASCADE
 );
 
-INSERT INTO b(data, aid)
-VALUES ('alice', 1),
-       ('bob', 2);
+-- Вставка тестовых данных в child_table
+INSERT INTO child_table (data, parent_id)
+VALUES 
+    ('alice', 1),
+    ('bob', 2);
 
-INSERT INTO a(data)
-VALUES ('alice'),
-       ('bob'),
-       ('charlie'),
-       ('dave');
+-- Вставка тестовых данных в parent_table
+INSERT INTO parent_table (data)
+VALUES 
+    ('alice'),
+    ('bob'),
+    ('charlie'),
+    ('dave');
 
-INSERT INTO b(data, aid)
-VALUES ('alise', 1),
-       ('bob', 2);
+-- Вставка дополнительных данных в child_table
+INSERT INTO child_table (data, parent_id)
+VALUES 
+    ('alise', 1),
+    ('bob', 2);
 
-DELETE
-FROM a
-WHERE data LIKE 'alice';
+-- Попытка удаления записи из parent_table (не вызовет ошибку благодаря ON DELETE CASCADE)
+DELETE FROM parent_table
+WHERE data = 'alice';
 
-UPDATE a
+-- Попытка обновления id в parent_table (вызовет ошибку без триггера)
+UPDATE parent_table
 SET id = 2019
 WHERE id = 1;
 
---------------------- 3.1: SQL level (off tutorial PostgreSQL)
+-- Удаление триггеров и функций, если они существуют
+DROP TRIGGER IF EXISTS trigger_delete_parent ON parent_table;
+DROP TRIGGER IF EXISTS trigger_update_parent ON parent_table;
+DROP FUNCTION IF EXISTS handle_parent_delete() CASCADE;
+DROP FUNCTION IF EXISTS handle_parent_update() CASCADE;
 
-DROP TABLE IF EXISTS a, b;
-
-CREATE TABLE a
-(
-  id   SERIAL PRIMARY KEY,
-  data VARCHAR(32)
-);
-
-CREATE TABLE b
-(
-  id   SERIAL PRIMARY KEY,
-  data VARCHAR(32),
-  aid  INT,
-  FOREIGN KEY (aid) REFERENCES a (id) ON DELETE CASCADE
-);
-
-DROP TRIGGER IF EXISTS trig_del ON a;
-DROP TRIGGER IF EXISTS trig_upd ON a;
-
-CREATE OR REPLACE FUNCTION foo() RETURNS TRIGGER AS
-$$
+-- Создание функции для обработки удаления из parent_table
+CREATE OR REPLACE FUNCTION handle_parent_delete()
+RETURNS TRIGGER AS $$
 BEGIN
-  IF TG_OP = 'DELETE' THEN
-    DELETE
-    FROM b
-    WHERE b.aid = OLD.id;
+    -- Избыточно, так как ON DELETE CASCADE уже выполняет это
+    DELETE FROM child_table
+    WHERE parent_id = OLD.id;
     RETURN OLD;
-  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION bar() RETURNS TRIGGER AS
-$$
+-- Создание функции для обработки обновления id в parent_table
+CREATE OR REPLACE FUNCTION handle_parent_update()
+RETURNS TRIGGER AS $$
 BEGIN
-  IF TG_OP = 'UPDATE' THEN
-    UPDATE b
-    SET aid = NEW.id
-    WHERE aid = OLD.id;
+    UPDATE child_table
+    SET parent_id = NEW.id
+    WHERE parent_id = OLD.id;
     RETURN NEW;
-  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trig_del
-  BEFORE DELETE
-  ON a
-  FOR EACH ROW
-EXECUTE PROCEDURE foo();
+-- Создание триггера для удаления связанных записей
+CREATE TRIGGER trigger_delete_parent
+    BEFORE DELETE ON parent_table
+    FOR EACH ROW
+    EXECUTE FUNCTION handle_parent_delete();
 
-CREATE TRIGGER trig_upd
-  AFTER UPDATE
-  ON a
-  FOR EACH ROW
-EXECUTE PROCEDURE bar();
+-- Создание триггера для обновления parent_id в child_table
+CREATE TRIGGER trigger_update_parent
+    BEFORE UPDATE ON parent_table
+    FOR EACH ROW
+    WHEN (OLD.id IS DISTINCT FROM NEW.id)
+    EXECUTE FUNCTION handle_parent_update();
 
-INSERT INTO b(data, aid)
-VALUES ('alice', 1),
-       ('bob', 2);
+-- Вставка тестовых данных для проверки триггеров
+INSERT INTO parent_table (data)
+VALUES 
+    ('alice'),
+    ('bob'),
+    ('charlie'),
+    ('dave');
 
-INSERT INTO a(data)
-VALUES ('alice'),
-       ('bob'),
-       ('charlie'),
-       ('dave');
+INSERT INTO child_table (data, parent_id)
+VALUES 
+    ('alice', 5),
+    ('bob', 6),
+    ('some_data', 5),
+    ('for_test', 6);
 
-INSERT INTO b(data, aid)
-VALUES ('some data', 1),
-       ('for test', 2);
+-- Проверка удаления записи
+DELETE FROM parent_table
+WHERE data = 'alice';
 
-DELETE
-FROM a
-WHERE data LIKE 'alice';
-
-UPDATE a
+-- Проверка обновления id
+UPDATE parent_table
 SET id = 2019
-WHERE id = 2;
+WHERE id = 6;
 
------------------------------------ --3-2)
+-- 3-2: Демонстрация связей между таблицами
 
-DROP TABLE IF EXISTS a, b;
+-- Удаление таблиц, если они существуют
+DROP TABLE IF EXISTS entity_a, entity_b, entity_a_b_link CASCADE;
 
--------------- one to one --------------
-CREATE TABLE a
-(
-  id SERIAL PRIMARY KEY
+-- One-to-One: Создание таблиц
+CREATE TABLE entity_a (
+    id  BIGINT GENERATED ALWAYS AS IDENTITY,
+    CONSTRAINT entity_a_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE b
-(
-  id INT PRIMARY KEY,
-  FOREIGN KEY (id) REFERENCES a (id)
+CREATE TABLE entity_b (
+    id  BIGINT NOT NULL,
+    CONSTRAINT entity_b_pk PRIMARY KEY (id),
+    CONSTRAINT entity_b_a_fk FOREIGN KEY (id) REFERENCES entity_a (id)
 );
 
------------- one to many --------------
-CREATE TABLE a
-(
-  id SERIAL PRIMARY KEY
+-- One-to-Many: Создание таблиц
+CREATE TABLE entity_a (
+    id  BIGINT GENERATED ALWAYS AS IDENTITY,
+    CONSTRAINT entity_a_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE b
-(
-  id   SERIAL PRIMARY KEY,
-  a_id INT,
-  FOREIGN KEY (a_id) REFERENCES a (id)
+CREATE TABLE entity_b (
+    id      BIGINT GENERATED ALWAYS AS IDENTITY,
+    a_id    BIGINT NOT NULL,
+    CONSTRAINT entity_b_pk PRIMARY KEY (id),
+    CONSTRAINT entity_b_a_fk FOREIGN KEY (a_id) REFERENCES entity_a (id)
 );
 
----------------- many to many  --------------
-CREATE TABLE a
-(
-  id SERIAL PRIMARY KEY
+-- Many-to-Many: Создание таблиц
+CREATE TABLE entity_a (
+    id  BIGINT GENERATED ALWAYS AS IDENTITY,
+    CONSTRAINT entity_a_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE b
-(
-  id SERIAL PRIMARY KEY
+CREATE TABLE entity_b (
+    id  BIGINT GENERATED ALWAYS AS IDENTITY,
+    CONSTRAINT entity_b_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE a_b_link
-(
-  a_id INT,
-  b_id INT,
-  FOREIGN KEY (a_id) REFERENCES a (id),
-  FOREIGN KEY (b_id) REFERENCES b (id),
-  PRIMARY KEY (a_id, b_id)
+CREATE TABLE entity_a_b_link (
+    a_id  BIGINT NOT NULL,
+    b_id  BIGINT NOT NULL,
+    CONSTRAINT entity_a_b_link_pk PRIMARY KEY (a_id, b_id),
+    CONSTRAINT entity_a_b_link_a_fk FOREIGN KEY (a_id) REFERENCES entity_a (id),
+    CONSTRAINT entity_a_b_link_b_fk FOREIGN KEY (b_id) REFERENCES entity_b (id)
 );
 
-----------------3-3----------------
-DROP TABLE IF EXISTS workers;
+-- 3-3: Создание таблицы workers
 
-CREATE TABLE workers
-(
-  id             SERIAL PRIMARY KEY,
-  name           VARCHAR(30),
-  department     VARCHAR(30),
-  phone          VARCHAR(11), --
-  task           VARCHAR(30),
-  books          VARCHAR(40),
-  colleagues     VARCHAR(120),
-  cluster_access BOOLEAN
+-- Удаление таблицы, если она существует
+DROP TABLE IF EXISTS workers CASCADE;
+
+-- Создание таблицы workers
+CREATE TABLE workers (
+    id              BIGINT GENERATED ALWAYS AS IDENTITY,
+    name            VARCHAR(50) NOT NULL,
+    department      VARCHAR(50) NOT NULL,
+    phone           VARCHAR(20) NOT NULL,
+    task            VARCHAR(100),
+    books           VARCHAR(200),
+    colleagues      VARCHAR(200),
+    cluster_access  BOOLEAN NOT NULL,
+    CONSTRAINT workers_pk PRIMARY KEY (id),
+    CONSTRAINT workers_phone_unique UNIQUE (phone)
 );
 
-INSERT INTO workers(name, department, phone, task, books, colleagues, cluster_access)
-VALUES ('Daniil Yakovlev', 'Yandex', '79831033794', 'Decay Tree Fitter', 'Avery, Landau, CernROOT', 'Arsenty Melnikov, Pavel Lisenkov, vvorob, krokovny', TRUE),
-       ('Pavel Lisenkov', 'JetBrains', '79888888888', 'Build plugin', 'Manual', 'Daniil Yakovlev, Arsenty Melnikov', TRUE),
-       ('Arsenty Melnikov', 'JetBrains', '79999999999', 'Optimization TensorFlow', 'TF, keras', 'Daniil Yakovlev, Pavel Lisenkov', TRUE);
-
-
-----------------------------------
+-- Вставка тестовых данных в workers
+INSERT INTO workers (name, department, phone, task, books, colleagues, cluster_access)
+VALUES 
+    ('Daniil Yakovlev', 'Yandex', '79831033794', 'Decay Tree Fitter', 'Avery, Landau, CernROOT', 'Arsenty Melnikov, Pavel Lisenkov, vvorob, krokovny', TRUE),
+    ('Pavel Lisenkov', 'JetBrains', '79888888888', 'Build plugin', 'Manual', 'Daniil Yakovlev, Arsenty Melnikov', TRUE),
+    ('Arsenty Melnikov', 'JetBrains', '79999999999', 'Optimization TensorFlow', 'TF, keras', 'Daniil Yakovlev, Pavel Lisenkov', TRUE);
