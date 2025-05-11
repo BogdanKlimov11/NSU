@@ -1,0 +1,21 @@
+<html>
+<body>
+<pre> 1| #<font color=09ab9b>include</font> &#60;<font color=994187>iostream</font>&#62;
+ 2| 
+ 3| <font color=0000ff>int</font> <font color=876300>main</font>()
+ 4| {
+ 5| &#8195;<font color=2f54ec>std</font>::<font color=4f4f95>cout</font> &#60;&#60; &#34;<font color=4b6432>Hello</font>, <font color=471fcf>world</font>&#34; &#60;&#60; <font color=2f54ec>std</font>::<font color=8a4e63>endl</font>;
+ 6| &#8195;<font color=0000ff>return</font> 0;
+ 7| }
+ 8| {
+ 9| }
+10| {
+11| }
+12| {
+13| }
+14| {
+15| }
+
+</pre>
+</body>
+</html>
