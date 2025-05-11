@@ -1,0 +1,13 @@
+How : 1
+Twenty : 1
+a : 2
+chuck : 2
+could : 1
+five : 1
+four : 1
+if : 1
+much : 1
+wood : 2
+wood-chuck : 1
+woodchuck : 2
+would : 1
