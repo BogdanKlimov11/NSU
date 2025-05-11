@@ -1,94 +1,133 @@
 section .data
-    prompt1 db "Enter a1: ", 0
-    prompt2 db "Enter d: ", 0
-    prompt3 db "Enter N: ", 0
-    result_msg db "Sum: ", 0
+    prompt1 db 'Enter the first number: ', 0
+    prompt2 db 'Enter the second number: ', 0
+    prompt3 db 'Choose operation (1=Sum, 2=Subtraction, 3=Multiplication, 4=Division, 5=Modulus): ', 0
+    msg db 'Result: ', 0
 
 section .bss
-    a1 resb 4
-    d resb 4
-    N resb 4
-    sum resb 4
+    num1 resb 4  ; переменная для первого числа
+    num2 resb 4  ; переменная для второго числа
+    result resb 4  ; переменная для результата
 
 section .text
     global _start
 
 _start:
-    ; Ввод a1
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, prompt1
-    mov edx, 9
-    int 0x80
+    ; Ввод первого числа
+    mov eax, 4                 ; syscall номер 4 (sys_write)
+    mov ebx, 1                 ; дескриптор файла 1 (stdout)
+    mov ecx, prompt1           ; адрес строки
+    mov edx, 23                ; длина строки
+    int 0x80                   ; системный вызов
 
-    mov eax, 3
-    mov ebx, 0
-    mov ecx, a1
-    mov edx, 4
-    int 0x80
+    mov eax, 3                 ; syscall номер 3 (sys_read)
+    mov ebx, 0                 ; дескриптор файла 0 (stdin)
+    mov ecx, num1              ; адрес для хранения числа
+    mov edx, 4                 ; количество байт для чтения
+    int 0x80                   ; системный вызов
 
-    ; Ввод d
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, prompt2
-    mov edx, 8
-    int 0x80
+    ; Ввод второго числа
+    mov eax, 4                 ; syscall номер 4 (sys_write)
+    mov ebx, 1                 ; дескриптор файла 1 (stdout)
+    mov ecx, prompt2           ; адрес строки
+    mov edx, 25                ; длина строки
+    int 0x80                   ; системный вызов
 
-    mov eax, 3
-    mov ebx, 0
-    mov ecx, d
-    mov edx, 4
-    int 0x80
+    mov eax, 3                 ; syscall номер 3 (sys_read)
+    mov ebx, 0                 ; дескриптор файла 0 (stdin)
+    mov ecx, num2              ; адрес для хранения числа
+    mov edx, 4                 ; количество байт для чтения
+    int 0x80                   ; системный вызов
 
-    ; Ввод N
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, prompt3
-    mov edx, 9
-    int 0x80
+    ; Ввод выбора операции
+    mov eax, 4                 ; syscall номер 4 (sys_write)
+    mov ebx, 1                 ; дескриптор файла 1 (stdout)
+    mov ecx, prompt3           ; адрес строки
+    mov edx, 72                ; длина строки
+    int 0x80                   ; системный вызов
 
-    mov eax, 3
-    mov ebx, 0
-    mov ecx, N
-    mov edx, 4
-    int 0x80
+    mov eax, 3                 ; syscall номер 3 (sys_read)
+    mov ebx, 0                 ; дескриптор файла 0 (stdin)
+    mov ecx, result            ; адрес для хранения выбора
+    mov edx, 4                 ; количество байт для чтения
+    int 0x80                   ; системный вызов
 
-    ; Инициализация переменных
-    mov eax, [a1]  ; a1
-    sub eax, '0'   ; Преобразуем ASCII в число
-    mov [sum], eax ; sum = a1
+    ; Преобразуем введенное значение в число (в нашем случае из строки в число)
 
-    mov ebx, [N]   ; N
-    sub ebx, '0'   ; Преобразуем ASCII в число
-    dec ebx        ; Уменьшаем, т.к. a1 уже добавили
+    ; Проводим выбор операции, в зависимости от введенной команды
+    mov al, [result]           ; загрузим выбранную операцию
+    sub al, '0'                ; преобразуем ASCII в число
 
-    mov ecx, [d]   ; d
-    sub ecx, '0'   ; Преобразуем ASCII в число
+    cmp al, 1                  ; если 1, то сложение
+    je .sum
 
-.loop:
-    test ebx, ebx  ; Если N == 0, выходим
-    jz .done
+    cmp al, 2                  ; если 2, то вычитание
+    je .sub
 
-    add eax, ecx   ; Добавляем d к предыдущему элементу
-    add [sum], eax ; Добавляем в сумму
-    dec ebx        ; Уменьшаем N
-    jmp .loop
+    cmp al, 3                  ; если 3, то умножение
+    je .mul
+
+    cmp al, 4                  ; если 4, то деление
+    je .div
+
+    cmp al, 5                  ; если 5, то остаток от деления
+    je .mod
+
+    jmp .done                  ; если ввели неправильный выбор, выходим
+
+.sum:
+    ; Сложение
+    mov eax, [num1]            ; загружаем первое число
+    add eax, [num2]            ; прибавляем второе число
+    mov [result], eax          ; сохраняем результат
+    jmp .print_result
+
+.sub:
+    ; Вычитание
+    mov eax, [num1]            ; загружаем первое число
+    sub eax, [num2]            ; вычитаем второе число
+    mov [result], eax          ; сохраняем результат
+    jmp .print_result
+
+.mul:
+    ; Умножение
+    mov eax, [num1]            ; загружаем первое число
+    imul eax, [num2]           ; умножаем на второе число
+    mov [result], eax          ; сохраняем результат
+    jmp .print_result
+
+.div:
+    ; Деление
+    mov eax, [num1]            ; загружаем первое число
+    xor edx, edx               ; очищаем регистр edx (для деления)
+    div dword [num2]           ; делим на второе число (eax:edx) -> eax = результат, edx = остаток
+    mov [result], eax          ; сохраняем результат
+    jmp .print_result
+
+.mod:
+    ; Остаток от деления
+    mov eax, [num1]            ; загружаем первое число
+    xor edx, edx               ; очищаем edx
+    div dword [num2]           ; делим на второе число
+    mov [result], edx          ; сохраняем остаток в result
+    jmp .print_result
+
+.print_result:
+    ; Выводим результат
+    mov eax, 4                 ; syscall номер 4 (sys_write)
+    mov ebx, 1                 ; дескриптор файла 1 (stdout)
+    mov ecx, msg               ; адрес строки
+    mov edx, 8                 ; длина строки
+    int 0x80                   ; системный вызов
+
+    mov eax, 4                 ; syscall номер 4 (sys_write)
+    mov ebx, 1                 ; дескриптор файла 1 (stdout)
+    mov ecx, result            ; адрес результата
+    mov edx, 4                 ; количество байт для вывода
+    int 0x80                   ; системный вызов
 
 .done:
-    ; Вывод результата
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, result_msg
-    mov edx, 5
-    int 0x80
-
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, sum
-    mov edx, 4
-    int 0x80
-
-    ; Завершение программы
-    mov eax, 1
-    xor ebx, ebx
-    int 0x80
+    ; Завершаем программу
+    mov eax, 1                 ; syscall номер 1 (sys_exit)
+    xor ebx, ebx               ; код возврата 0
+    int 0x80                   ; системный вызов
