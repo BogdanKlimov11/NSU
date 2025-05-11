@@ -1,0 +1,5 @@
+24.11.2014 Auto:gasoline  1400
+23.11.2014 Food:meet 500
+23.11.2014 Food:bread 90.33
+14.11.2014 Products:cafe 190
+20.11.2014 House:table 1000
