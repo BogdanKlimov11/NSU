@@ -1,0 +1,8 @@
+course	C	12	200	1
+course	G	18	5	1	4	3
+teacher	K	23	1	12
+teacher	A	200	1	12
+teacher	F	5	7	18
+student	B	1	18	12
+student	E	4	18	12
+student	D	3	18	12
