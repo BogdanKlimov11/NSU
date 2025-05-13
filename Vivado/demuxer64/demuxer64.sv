@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-// 8 bit muxer
+// 8 bit demuxer
 module demuxer8(
     input logic in,
     input logic [2:0] sel,
@@ -52,7 +52,7 @@ end
 
 endmodule
 
-// 64 bit muxer
+// 64 bit demuxer
 module demuxer64(
     input logic in,
     input logic [5:0] sel,
