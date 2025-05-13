@@ -41,7 +41,7 @@ module adder4_cn(
     output p_group,
     // generate group
     output g_group
-    // output cout
+//    output cout
     );
 
 logic [3:0] p, g;
