@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module shifter (
+module shifter(
     input [7:0] in,
     input [2:0] sh,
     output logic [7:0] q
