@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-// TestBench for 8 bit muxer
+// TestBench for 8 bit demuxer
 module demuxer8_TB();
 
 logic in;
@@ -23,7 +23,7 @@ end
 
 endmodule
 
-// TestBench for 64 bit muxer
+// TestBench for 64 bit demuxer
 module demuxer64_TB();
 
 logic in;
