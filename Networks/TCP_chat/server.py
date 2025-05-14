@@ -1,13 +1,10 @@
 import socket
 from threading import Thread
 
-
 def sendMessage(message, clientSockets):
-
     for clsock in clientSockets:
         clsock.send(bytes(message))
     pass
-
 
 def autorization(clsock, clientSockets, online, accounts):
     while True:
@@ -21,7 +18,6 @@ def autorization(clsock, clientSockets, online, accounts):
         else:
             clsock.send(bytes("incorrect", 'utf8'))
     pass
-
 
 def reciveMessage(clsock, clientSockets, online, accounts, msg):
     autorization(clsock, clientSockets, online, accounts)
@@ -42,7 +38,6 @@ def reciveMessage(clsock, clientSockets, online, accounts, msg):
                 msg = ''
     pass
 
-
 def getOnlineUsers(online):
     onUsers = []
     for key, value in online.items():
@@ -50,19 +45,16 @@ def getOnlineUsers(online):
             onUsers.append(key)
     return onUsers
 
-
 def isConnected(login, online):
     if online[login]:
         return True
     return False
-
 
 def closeClient(clsock, clientSockets, online, user):
     online[user] = False
     clientSockets.remove(clsock)
     clsock.close()
     pass
-
 
 def checkUser(auth, acc, online):
     logAndPass = auth.decode('utf8').split('~')
@@ -75,7 +67,6 @@ def checkUser(auth, acc, online):
             print('passwd ok')
             return True
     return False
-
 
 accounts = {
     'user1': '1234',
@@ -97,11 +88,10 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind(address)
 sock.listen(MAX_CLIENTS)
 
-
 while True:
     conn, addr = sock.accept()
     print(conn)
-    threadRecv = Thread(target=reciveMessage, args=(conn, clientSockets, online, accounts, 'hello'))
+    threadRecv = Thread(target = reciveMessage, args = (conn, clientSockets, online, accounts, 'hello'))
     threadRecv.start()
 
 sock.close()
