@@ -2,7 +2,6 @@ import socket
 from threading import Thread
 import queue
 
-
 def receiver(socket, mes):
     while True:
         message, addr = socket.recvfrom(1024)
@@ -22,10 +21,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST,1)
 mes = 'hello'
 
-th_receive = Thread(target=receiver, args=(s, mes))
-th_send = Thread(target=sender, args=(sock, mes))
+th_receive = Thread(target=receiver, args = (s, mes))
+th_send = Thread(target=sender, args = (sock, mes))
 th_send.start()
 th_receive.start()
-
-
-
