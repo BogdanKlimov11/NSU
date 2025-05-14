@@ -7,9 +7,7 @@ buffer_size = 4096
 delay = 0.0001
 forward_to = ('localhost', 5556)
 
-
 class Forward:
-
     def __init__(self):
         self.forward = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -19,7 +17,6 @@ class Forward:
 
 
 class TheServer:
-
     input_list = []
     channel = {}
 
@@ -30,7 +27,6 @@ class TheServer:
         self.server.listen(20)
 
     def main_loop(self):
-
         self.input_list.append(self.server)
 
         while 1:
@@ -51,9 +47,8 @@ class TheServer:
                     self.on_recv()
 
     def on_accept(self):
-
-        forward = Forward().start(forward_to[0], forward_to[1])     # socket conn to server
-        clientsock, clientaddr = self.server.accept()               # proxy connects to client
+        forward = Forward().start(forward_to[0], forward_to[1]) # socket conn to server
+        clientsock, clientaddr = self.server.accept() # proxy connects to client
 
         if forward:
             print(clientaddr, "connected")
@@ -67,7 +62,6 @@ class TheServer:
             clientsock.close()
 
     def on_close(self):
-
         print(self.s.getpeername(), "disconnected")
         self.input_list.remove(self.s)
         self.input_list.remove(self.channel[self.s])
