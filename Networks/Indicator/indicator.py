@@ -3,10 +3,10 @@ import pcapy
 import threading
 from matplotlib import pyplot
 from matplotlib import animation
+
 packet_count = 0
 data_count = 0
 last_timebin = 0
-
 
 class PcapThread(threading.Thread):
     def __init__(self, cap):
@@ -19,7 +19,6 @@ class PcapThread(threading.Thread):
             something, packet = self.cap.next()
             packet_count += 1
             data_count += len(packet)
-
 
 def plot_cont():
     start_time = datetime.datetime.now()
@@ -52,9 +51,8 @@ def plot_cont():
         plot_data.set_title("Data")
         plot_data.plot(x, data)
 
-    a = animation.FuncAnimation(fig, update, repeat=False)
+    a = animation.FuncAnimation(fig, update, repeat = False)
     pyplot.show()
-
 
 cap = pcapy.open_live("en1", 65536, 1, 50)
 thread1 = PcapThread(cap)
