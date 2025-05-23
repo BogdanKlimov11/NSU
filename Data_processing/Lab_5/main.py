@@ -320,9 +320,9 @@ def task_5():
 def task_6():
     print("Plotting Task 6: Cosine signal spectrogram")
     setup_plot()
-    fs = 1000  # Частота дискретизации
-    time_array = np.linspace(0, 5, fs * 5)  # 5 секунд
-    signal = np.cos(2 * np.pi * 5 * time_array)  # Косинус с частотой 5 Гц
+    fs = 1000
+    time_array = np.linspace(0, 5, fs * 5)
+    signal = np.cos(2 * np.pi * 5 * time_array)
     n_fft = 2048
 
     morlet = morlet_wavelet(time_array, omega_0=1, alpha=100)
