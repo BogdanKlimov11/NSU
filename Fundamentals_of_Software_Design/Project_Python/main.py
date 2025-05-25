@@ -12,6 +12,8 @@ TILE = 32
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Танчики")
+icon = pygame.image.load('logo.png')
+pygame.display.set_icon(icon)
 clock = pygame.time.Clock()
 
 fontUI = pygame.font.Font(None, 30)
