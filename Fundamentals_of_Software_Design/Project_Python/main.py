@@ -298,7 +298,8 @@ class Bullet:
                             Bang(self.px, self.py)
                             break
                     elif obj.rect.collidepoint(self.px, self.py):
-                        obj.damage(self.damage)
+                        if hasattr(obj, 'damage'):
+                            obj.damage(self.damage if obj.type != 'bomb' else 1)
                         bullets.remove(self)
                         Bang(self.px, self.py)
                         break
@@ -314,8 +315,12 @@ class Bomb:
         self.rect = pygame.Rect(px - TILE//2, py - TILE//2, TILE, TILE)
         self.timer = 180
         self.explosion_radius = TILE * 2
+        self.exploded = False  # Добавляем флаг взрыва
 
     def update(self):
+        if self.exploded:  # Если уже взорвалась, ничего не делаем
+            return
+            
         self.timer -= 1
         if self.timer <= 0:
             self.explode()
@@ -325,18 +330,19 @@ class Bomb:
                 self.explode()
                 break
 
-    def draw(self):
-        pygame.draw.rect(window, 'red', self.rect)
-        pygame.draw.rect(window, 'black', self.rect, 2)
-        pygame.draw.rect(window, self.parent.player_color, self.rect, 1)
-        
-        timer_text = fontUI.render(str(max(0, self.timer // 60 + 1)), True, 'white')
-        window.blit(timer_text, (self.rect.centerx - timer_text.get_width()//2, 
-                               self.rect.centery - timer_text.get_height()//2))
+    def damage(self, value):
+        if not self.exploded:  # Взрываемся только если еще не взорвались
+            self.explode()
 
     def explode(self):
-        for obj in objects:
-            if obj != self.parent and hasattr(obj, 'damage'):
+        if self.exploded:  # Защита от повторного взрыва
+            return
+            
+        self.exploded = True
+        temp_objects = objects.copy()  # Создаем копию списка объектов
+        
+        for obj in temp_objects:
+            if obj != self and hasattr(obj, 'damage'):
                 obj_center = obj.rect.center
                 distance = math.sqrt((obj_center[0] - self.rect.centerx)**2 + 
                                     (obj_center[1] - self.rect.centery)**2)
@@ -347,7 +353,22 @@ class Bomb:
         
         Bang(self.rect.centerx, self.rect.centery)
         sound_boom.play()
-        objects.remove(self)
+        
+        # Удаляем бомбу из объектов после взрыва
+        if self in objects:
+            objects.remove(self)
+
+    def draw(self):
+        if self.exploded:  # Не рисуем если уже взорвалась
+            return
+            
+        pygame.draw.rect(window, 'red', self.rect)
+        pygame.draw.rect(window, 'black', self.rect, 2)
+        pygame.draw.rect(window, self.parent.player_color, self.rect, 1)
+        
+        timer_text = fontUI.render(str(max(0, self.timer // 60 + 1)), True, 'white')
+        window.blit(timer_text, (self.rect.centerx - timer_text.get_width()//2, 
+                               self.rect.centery - timer_text.get_height()//2))
 
 class Bang:
     def __init__(self, px, py):
@@ -505,7 +526,7 @@ def draw_menu():
     controls_text2 = fontUI.render("W - вверх, A - влево, S - вниз, D - вправо", True, 'white')
     controls_text3 = fontUI.render("LCTRL - огонь, LSHIFT - действие", True, 'white')
     controls_text4 = fontUI.render("Управление красным танком:", True, 'red')
-    controls_text5 = fontUI.render("^ - вверх, < - влево, v - вниз, > - вправо", True, 'white')
+    controls_text5 = fontUI.render("UP - вверх, LEFT - влево, DOWN - вниз, RIGHT - вправо", True, 'white')
     controls_text6 = fontUI.render("RCTRL - огонь, RSHIFT - действие", True, 'white')
     
     window.blit(controls_text1, (WIDTH//2 - controls_text1.get_width()//2, 180))
