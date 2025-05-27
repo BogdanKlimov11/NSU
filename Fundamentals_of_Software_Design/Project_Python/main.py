@@ -1,7 +1,15 @@
 import pygame
 from random import randint
+import os
 import sys
 import math
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 pygame.init()
 pygame.mixer.init()
@@ -12,47 +20,47 @@ TILE = 32
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Танчики")
-icon = pygame.image.load('logo.png')
+icon = pygame.image.load(resource_path('logo.png'))
 pygame.display.set_icon(icon)
 clock = pygame.time.Clock()
 
 fontUI = pygame.font.Font(None, 30)
 fontLarge = pygame.font.Font(None, 72)
 
-imgBrick = pygame.image.load('images/block_brick.png')
-imgBush = pygame.image.load('images/block_bushes.png')
-imgArmor = pygame.image.load('images/block_armor.png')
+imgBrick = pygame.image.load(resource_path('images/block_brick.png'))
+imgBush = pygame.image.load(resource_path('images/block_bushes.png'))
+imgArmor = pygame.image.load(resource_path('images/block_armor.png'))
 imgTanks = [
-    pygame.image.load('images/tank1.png'),
-    pygame.image.load('images/tank2.png'),
-    pygame.image.load('images/tank3.png'),
-    pygame.image.load('images/tank4.png'),
-    pygame.image.load('images/tank5.png'),
-    pygame.image.load('images/tank6.png'),
-    pygame.image.load('images/tank7.png'),
-    pygame.image.load('images/tank8.png'),
+    pygame.image.load(resource_path('images/tank1.png')),
+    pygame.image.load(resource_path('images/tank2.png')),
+    pygame.image.load(resource_path('images/tank3.png')),
+    pygame.image.load(resource_path('images/tank4.png')),
+    pygame.image.load(resource_path('images/tank5.png')),
+    pygame.image.load(resource_path('images/tank6.png')),
+    pygame.image.load(resource_path('images/tank7.png')),
+    pygame.image.load(resource_path('images/tank8.png')),
 ]
 imgBangs = [
-    pygame.image.load('images/bang1.png'),
-    pygame.image.load('images/bang2.png'),
-    pygame.image.load('images/bang3.png'),
+    pygame.image.load(resource_path('images/bang1.png')),
+    pygame.image.load(resource_path('images/bang2.png')),
+    pygame.image.load(resource_path('images/bang3.png')),
 ]
 imgBonuses = [
-    pygame.image.load('images/bonus_star.png'),
-    pygame.image.load('images/bonus_tank.png'),
-    pygame.image.load('images/bonus_helmet.png'),
-    pygame.image.load('images/bonus_bomb.png'),
-    pygame.image.load('images/bonus_time.png'),
-    pygame.image.load('images/bonus_shovel.png')
+    pygame.image.load(resource_path('images/bonus_star.png')),
+    pygame.image.load(resource_path('images/bonus_tank.png')),
+    pygame.image.load(resource_path('images/bonus_helmet.png')),
+    pygame.image.load(resource_path('images/bonus_bomb.png')),
+    pygame.image.load(resource_path('images/bonus_time.png')),
+    pygame.image.load(resource_path('images/bonus_shovel.png'))
 ]
 
-sound_shot = pygame.mixer.Sound('sounds/shot.wav')
-sound_boom = pygame.mixer.Sound('sounds/boom.wav')
-sound_bonus = pygame.mixer.Sound('sounds/bonus.wav')
-sound_start = pygame.mixer.Sound('sounds/start.mp3')
-sound_finish = pygame.mixer.Sound('sounds/finish.mp3')
-sound_kill = pygame.mixer.Sound('sounds/kill.wav')
-sound_health = pygame.mixer.Sound('sounds/health.wav')
+sound_shot = pygame.mixer.Sound(resource_path('sounds/shot.wav'))
+sound_boom = pygame.mixer.Sound(resource_path('sounds/boom.wav'))
+sound_bonus = pygame.mixer.Sound(resource_path('sounds/bonus.wav'))
+sound_start = pygame.mixer.Sound(resource_path('sounds/start.mp3'))
+sound_finish = pygame.mixer.Sound(resource_path('sounds/finish.mp3'))
+sound_kill = pygame.mixer.Sound(resource_path('sounds/kill.wav'))
+sound_health = pygame.mixer.Sound(resource_path('sounds/health.wav'))
 
 DIRECTS = [[0, -1], [1, 0], [0, 1], [-1, 0]]
 
@@ -167,7 +175,6 @@ class Tank:
         
         oldX, oldY = self.rect.topleft
         
-        # Движение только по одной оси (последняя нажатая клавиша)
         moved = False
         if keys[self.keyLEFT]:
             self.rect.x -= current_speed
@@ -315,10 +322,17 @@ class Bomb:
         self.rect = pygame.Rect(px - TILE//2, py - TILE//2, TILE, TILE)
         self.timer = 180
         self.explosion_radius = TILE * 2
+<<<<<<< HEAD
+        self.exploded = False
+
+    def update(self):
+        if self.exploded:
+=======
         self.exploded = False  # Добавляем флаг взрыва
 
     def update(self):
         if self.exploded:  # Если уже взорвалась, ничего не делаем
+>>>>>>> 79131c16553b88183cc014f246d5dde37a335126
             return
             
         self.timer -= 1
@@ -331,6 +345,17 @@ class Bomb:
                 break
 
     def damage(self, value):
+<<<<<<< HEAD
+        if not self.exploded:
+            self.explode()
+
+    def explode(self):
+        if self.exploded:
+            return
+            
+        self.exploded = True
+        temp_objects = objects.copy()
+=======
         if not self.exploded:  # Взрываемся только если еще не взорвались
             self.explode()
 
@@ -340,6 +365,7 @@ class Bomb:
             
         self.exploded = True
         temp_objects = objects.copy()  # Создаем копию списка объектов
+>>>>>>> 79131c16553b88183cc014f246d5dde37a335126
         
         for obj in temp_objects:
             if obj != self and hasattr(obj, 'damage'):
@@ -354,12 +380,19 @@ class Bomb:
         Bang(self.rect.centerx, self.rect.centery)
         sound_boom.play()
         
+<<<<<<< HEAD
+=======
         # Удаляем бомбу из объектов после взрыва
+>>>>>>> 79131c16553b88183cc014f246d5dde37a335126
         if self in objects:
             objects.remove(self)
 
     def draw(self):
+<<<<<<< HEAD
+        if self.exploded:
+=======
         if self.exploded:  # Не рисуем если уже взорвалась
+>>>>>>> 79131c16553b88183cc014f246d5dde37a335126
             return
             
         pygame.draw.rect(window, 'red', self.rect)
@@ -520,8 +553,7 @@ def draw_menu():
     
     start_button.draw(window)
     exit_button.draw(window)
-
-    # Управление
+    
     controls_text1 = fontUI.render("Управление синим танком:", True, 'blue')
     controls_text2 = fontUI.render("W - вверх, A - влево, S - вниз, D - вправо", True, 'white')
     controls_text3 = fontUI.render("LCTRL - огонь, LSHIFT - действие", True, 'white')
@@ -578,7 +610,7 @@ def reset_game():
     Tank('red', 650, 275, 0, (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_RCTRL, pygame.K_RSHIFT))
     ui = UI()
     
-    for _ in range(50):
+    for _ in range(200):
         while True:
             x = randint(0, WIDTH // TILE - 1) * TILE
             y = randint(1, HEIGHT // TILE - 1) * TILE
