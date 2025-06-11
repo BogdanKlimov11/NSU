@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>vertex_shader.vsh</file>
+        <file>fragment_shader.fsh</file>
+        <file>billiard.png</file>
+    </qresource>
+</RCC>
