@@ -84,7 +84,8 @@ char inputAction() {
         while (getchar() != '\n'); // Clearing the input buffer
         if (action == 'R' || action == 'F' || action == 'X') {
             return action;
-        } else {
+        }
+        else {
             printf("You entered an invalid character. Try again.\n");
         }
     }
