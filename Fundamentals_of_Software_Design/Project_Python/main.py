@@ -322,18 +322,11 @@ class Bomb:
         self.rect = pygame.Rect(px - TILE//2, py - TILE//2, TILE, TILE)
         self.timer = 180
         self.explosion_radius = TILE * 2
-<<<<<<< HEAD
         self.exploded = False
 
     def update(self):
         if self.exploded:
-=======
-        self.exploded = False  # Добавляем флаг взрыва
-
-    def update(self):
-        if self.exploded:  # Если уже взорвалась, ничего не делаем
->>>>>>> 79131c16553b88183cc014f246d5dde37a335126
-            return
+            self.exploded = False
             
         self.timer -= 1
         if self.timer <= 0:
@@ -345,7 +338,6 @@ class Bomb:
                 break
 
     def damage(self, value):
-<<<<<<< HEAD
         if not self.exploded:
             self.explode()
 
@@ -355,18 +347,6 @@ class Bomb:
             
         self.exploded = True
         temp_objects = objects.copy()
-=======
-        if not self.exploded:  # Взрываемся только если еще не взорвались
-            self.explode()
-
-    def explode(self):
-        if self.exploded:  # Защита от повторного взрыва
-            return
-            
-        self.exploded = True
-        temp_objects = objects.copy()  # Создаем копию списка объектов
->>>>>>> 79131c16553b88183cc014f246d5dde37a335126
-        
         for obj in temp_objects:
             if obj != self and hasattr(obj, 'damage'):
                 obj_center = obj.rect.center
@@ -380,19 +360,11 @@ class Bomb:
         Bang(self.rect.centerx, self.rect.centery)
         sound_boom.play()
         
-<<<<<<< HEAD
-=======
-        # Удаляем бомбу из объектов после взрыва
->>>>>>> 79131c16553b88183cc014f246d5dde37a335126
         if self in objects:
             objects.remove(self)
 
     def draw(self):
-<<<<<<< HEAD
         if self.exploded:
-=======
-        if self.exploded:  # Не рисуем если уже взорвалась
->>>>>>> 79131c16553b88183cc014f246d5dde37a335126
             return
             
         pygame.draw.rect(window, 'red', self.rect)
