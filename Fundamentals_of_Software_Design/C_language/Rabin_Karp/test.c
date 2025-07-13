@@ -100,6 +100,6 @@ int main() {
     test_unicode();
     test_large_text();
     
-    printf("All Rabin-Karp tests passed successfully!\n");
+    printf("All tests passed successfully!\n");
     return 0;
 }
