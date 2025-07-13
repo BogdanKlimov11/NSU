@@ -22,12 +22,24 @@ static TrieNode* create_node() {
     return node;
 }
 
+static void free_trie(TrieNode* node) {
+    if (!node) return;
+    
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        if (node->children[i]) {
+            free_trie(node->children[i]);
+        }
+    }
+    free(node);
+}
+
 static void insert_pattern(TrieNode* root, const char* pattern, size_t index) {
     TrieNode* node = root;
     for (size_t i = 0; pattern[i]; i++) {
         int ch = (unsigned char)pattern[i];
         if (!node->children[ch]) {
             node->children[ch] = create_node();
+            if (!node->children[ch]) return;
         }
         node = node->children[ch];
     }
@@ -36,6 +48,8 @@ static void insert_pattern(TrieNode* root, const char* pattern, size_t index) {
 }
 
 static void build_fail_links(TrieNode* root) {
+    if (!root) return;
+
     TrieNode* queue[ALPHABET_SIZE];
     int front = 0, rear = 0;
     
@@ -87,7 +101,7 @@ SearchResult substring_search(const char* text, const char** patterns, size_t pa
     size_t capacity = 16;
     result.positions = (int*)malloc(capacity * sizeof(int));
     if (!result.positions) {
-        // TODO: Free trie nodes
+        free_trie(root);
         return result;
     }
     
@@ -111,7 +125,7 @@ SearchResult substring_search(const char* text, const char** patterns, size_t pa
                     int* new_positions = (int*)realloc(result.positions, capacity * sizeof(int));
                     if (!new_positions) {
                         free(result.positions);
-                        // TODO: Free trie nodes
+                        free_trie(root);
                         result.positions = NULL;
                         result.count = 0;
                         return result;
@@ -124,6 +138,6 @@ SearchResult substring_search(const char* text, const char** patterns, size_t pa
         }
     }
     
-    // TODO: Free trie nodes
+    free_trie(root);
     return result;
 }
