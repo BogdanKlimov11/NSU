@@ -3,6 +3,6 @@
 
 #include <stddef.h>
 
-const char* boyer_moore_search(const char* haystack, const char* needle);
+const char* boyer_moore(const char* haystack, const char* needle);
 
 #endif
