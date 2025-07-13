@@ -102,6 +102,6 @@ int main() {
     test_unicode();
     test_large_text();
     
-    printf("All Z-function search tests passed successfully!\n");
+    printf("All tests passed successfully!\n");
     return 0;
 }
