@@ -86,6 +86,6 @@ int main() {
     test_odd_length();
     test_duplicates();
     test_large_array();
-    printf("All binary search tests passed successfully!\n");
+    printf("All tests passed successfully!\n");
     return 0;
 }
