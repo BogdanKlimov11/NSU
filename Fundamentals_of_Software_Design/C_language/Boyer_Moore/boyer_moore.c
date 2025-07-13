@@ -48,7 +48,7 @@ static void preprocess_good_suffix(const char* needle, size_t len, int* good_suf
     free(suffix);
 }
 
-const char* boyer_moore(const char* haystack, const char* needle) {
+const char* my_strstr(const char* haystack, const char* needle) {
     if (!haystack || !needle) return NULL;
     
     size_t n = strlen(haystack);
